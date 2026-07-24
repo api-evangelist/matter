@@ -1,0 +1,593 @@
+openapi: 3.1.0
+info:
+  title: Matter Account Items API
+  version: '1.0'
+  description: 'The Matter API lets you read, save, and organize content in your Matter library.
+
+
+    Every request requires a [Bearer token](/api/authentication) and an active
+
+    Matter Pro subscription.
+
+    '
+  contact:
+    email: hello@getmatter.com
+    url: https://getmatter.com
+servers:
+- url: https://api.getmatter.com/public
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Items
+  description: Articles, podcasts, videos, PDFs, and tweets in your library.
+paths:
+  /v1/items:
+    get:
+      operationId: listItems
+      summary: List items
+      description: Returns a paginated list of items in your library.
+      tags:
+      - Items
+      parameters:
+      - name: status
+        in: query
+        description: 'Filter by item status. Comma-separated for multiple values.
+
+          '
+        schema:
+          type: string
+          default: all
+          enum:
+          - all
+          - inbox
+          - queue
+          - archive
+      - name: order
+        in: query
+        description: 'Sort order. `updated` sorts by last-updated timestamp (default, best for sync). `library_position` sorts by the item''s manual queue ordering (queue_order). `inbox_position` sorts by the item''s feed position (newest first). Neither position ordering requires a status filter — items without a position sort last (nulls last).
+
+          '
+        schema:
+          type: string
+          default: updated
+          enum:
+          - updated
+          - library_position
+          - inbox_position
+      - name: is_favorite
+        in: query
+        description: Filter to favorited items only.
+        schema:
+          type: boolean
+      - name: tag
+        in: query
+        description: 'Filter to items with a specific tag ID. Comma-separated for multiple (matches **any**).
+
+          '
+        schema:
+          type: string
+          example: tag_n5j2x,tag_k3m9p
+      - name: content_type
+        in: query
+        description: 'Filter by content type. Comma-separated for multiple.
+
+          '
+        schema:
+          type: string
+          enum:
+          - article
+          - podcast
+          - pdf
+          - tweet
+      - name: updated_since
+        in: query
+        description: 'ISO 8601 timestamp. Return only items updated after this time. Useful for incremental sync.
+
+          '
+        schema:
+          type: string
+          format: date-time
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of items.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedList'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createItem
+      summary: Save item
+      description: 'Save a new item to your library by URL. Triggers background content
+
+        extraction. Check `processing_status` to know when the item is ready.
+
+
+        About 40% of saves complete instantly (cached content). For the rest,
+
+        processing typically takes 20–60 seconds.
+
+        '
+      tags:
+      - Items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: The URL to save. Must be a valid `http://` or `https://` URL.
+                  example: https://paulgraham.com/greatwork.html
+                status:
+                  type: string
+                  enum:
+                  - queue
+                  - archive
+                  default: queue
+                  description: Where to place the item.
+      responses:
+        '201':
+          description: Item saved.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: The item ID (e.g. `itm_r9f3a`).
+      schema:
+        type: string
+        pattern: ^itm_[0-9A-Za-z]+$
+    get:
+      operationId: getItem
+      summary: Get item
+      description: Returns a single item from your library with full metadata.
+      tags:
+      - Items
+      parameters:
+      - name: include
+        in: query
+        description: 'Comma-separated list of additional fields. Currently supported: `markdown`. Markdown requests count against the content rate limit (20/min).
+
+          '
+        schema:
+          type: string
+          example: markdown
+      responses:
+        '200':
+          description: Item detail.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateItem
+      summary: Update item
+      description: Update an item's status, favorite state, or reading progress.
+      tags:
+      - Items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - queue
+                  - archive
+                  description: Move the item to `queue` or `archive`.
+                is_favorite:
+                  type: boolean
+                  description: Set to `true` to favorite, `false` to unfavorite.
+                reading_progress:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 1
+                  description: Reading progress as a float from `0.0` to `1.0`.
+      responses:
+        '200':
+          description: Updated item.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteItem
+      summary: Delete item
+      description: Permanently remove an item from your library.
+      tags:
+      - Items
+      responses:
+        '204':
+          description: Item deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: not_found
+              message: The requested resource was not found.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: validation_error
+              message: The url field is required.
+              field: url
+  headers:
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+  schemas:
+    Item:
+      type: object
+      required:
+      - object
+      - id
+      - title
+      - url
+      - status
+      - processing_status
+      - is_favorite
+      - content_type
+      - reading_progress
+      - tags
+      - updated_at
+      properties:
+        object:
+          type: string
+          const: item
+        id:
+          type: string
+          description: Prefixed item ID (e.g. `itm_r9f3a`).
+          example: itm_r9f3a
+        title:
+          type: string
+          example: How to Do Great Work
+        url:
+          type: string
+          format: uri
+          example: https://paulgraham.com/greatwork.html
+        site_name:
+          type: string
+          description: The source website name.
+          example: paulgraham.com
+        author:
+          oneOf:
+          - $ref: '#/components/schemas/Author'
+          - type: 'null'
+          description: The item's author, if known.
+        status:
+          type: string
+          nullable: true
+          enum:
+          - inbox
+          - queue
+          - archive
+          description: 'Status: `inbox`, `queue`, or `archive`. `null` when the item has no status (e.g. search results for content the user has not saved).
+
+            '
+          example: queue
+        processing_status:
+          type: string
+          enum:
+          - processing
+          - completed
+          - failed
+          description: Content extraction status.
+          example: completed
+        is_favorite:
+          type: boolean
+          example: false
+        content_type:
+          type: string
+          enum:
+          - article
+          - podcast
+          - pdf
+          - tweet
+          description: The type of content.
+          example: article
+        word_count:
+          type: integer
+          nullable: true
+          description: Estimated word count. `null` for non-text content.
+          example: 11842
+        reading_progress:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Reading progress from `0.0` to `1.0`.
+          example: 0.35
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          description: URL of the item's hero image, if available.
+        excerpt:
+          type: string
+          nullable: true
+          description: Short excerpt or description of the item.
+        markdown:
+          type: string
+          nullable: true
+          description: 'Parsed article body as markdown. Only included when `?include=markdown` is set.
+
+            '
+        library_position:
+          type: integer
+          format: int64
+          nullable: true
+          description: 'The item''s position in the library (queue/archive). Non-null when the item has a library entry. Higher values are closer to the top. Use this field to sort items in library order locally.
+
+            '
+          example: 58974321000
+        inbox_position:
+          type: integer
+          nullable: true
+          description: 'The item''s 0-based index in the inbox feed. Non-null when the item is in the inbox. Lower values are closer to the top. Use this field to sort items in inbox order locally.
+
+            '
+          example: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        updated_at:
+          type: string
+          format: date-time
+          description: 'Last change to this item or its associated data (status, reading progress, favorites, tags, annotations, or content re-extraction).
+
+            '
+          example: '2026-03-30T19:15:00Z'
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
+    Author:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      properties:
+        object:
+          type: string
+          const: author
+        id:
+          type: string
+          description: Prefixed author ID (e.g. `aut_p4w7q`).
+          example: aut_p4w7q
+        name:
+          type: string
+          example: Paul Graham
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+    Tag:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      - item_count
+      - created_at
+      properties:
+        object:
+          type: string
+          const: tag
+        id:
+          type: string
+          description: Prefixed tag ID (e.g. `tag_n5j2x`).
+          example: tag_n5j2x
+        name:
+          type: string
+          example: essays
+        item_count:
+          type: integer
+          description: Number of items with this tag.
+          example: 42
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-01-15T10:00:00Z'
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Personal API token with `mat_` prefix. Generate one at https://web.getmatter.com/settings.
+
+        '

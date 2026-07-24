@@ -1,0 +1,236 @@
+openapi: 3.1.0
+info:
+  title: Matter Account Reading Sessions API
+  version: '1.0'
+  description: 'The Matter API lets you read, save, and organize content in your Matter library.
+
+
+    Every request requires a [Bearer token](/api/authentication) and an active
+
+    Matter Pro subscription.
+
+    '
+  contact:
+    email: hello@getmatter.com
+    url: https://getmatter.com
+servers:
+- url: https://api.getmatter.com/public
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Reading Sessions
+  description: Reading time history.
+paths:
+  /v1/reading_sessions:
+    get:
+      operationId: listReadingSessions
+      summary: List reading sessions
+      description: 'Returns a paginated list of reading sessions for the authenticated user,
+
+        ordered by date descending (newest first).
+
+
+        Each session records a single reading period with a timestamp and duration.
+
+        Use these to compute reading streaks, daily totals, or other time-based
+
+        statistics client-side.
+
+        '
+      tags:
+      - Reading Sessions
+      parameters:
+      - name: since
+        in: query
+        description: 'Only return sessions on or after this ISO 8601 datetime. Useful for incremental sync.
+
+          '
+        schema:
+          type: string
+          format: date-time
+        example: '2026-04-01T00:00:00Z'
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of reading sessions.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedList'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReadingSession'
+              example:
+                object: list
+                results:
+                - object: reading_session
+                  id: rs_k8x2m
+                  date: '2026-04-09T14:23:00Z'
+                  seconds_read: 180
+                - object: reading_session
+                  id: rs_j7w1n
+                  date: '2026-04-09T08:12:00Z'
+                  seconds_read: 162
+                - object: reading_session
+                  id: rs_h6v0p
+                  date: '2026-04-08T21:45:00Z'
+                  seconds_read: 480
+                has_more: true
+                next_cursor: eyJ1YSI6MTc...
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+  headers:
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+  schemas:
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
+    ReadingSession:
+      type: object
+      required:
+      - object
+      - id
+      - date
+      - seconds_read
+      properties:
+        object:
+          type: string
+          const: reading_session
+        id:
+          type: string
+          description: Prefixed reading session ID (e.g. `rs_k8x2m`).
+          example: rs_k8x2m
+        date:
+          type: string
+          format: date-time
+          description: When the reading session occurred (UTC).
+          example: '2026-04-09T14:23:00Z'
+        seconds_read:
+          type: integer
+          description: Duration of the session in seconds.
+          example: 180
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Personal API token with `mat_` prefix. Generate one at https://web.getmatter.com/settings.
+
+        '

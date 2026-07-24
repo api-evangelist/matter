@@ -1,0 +1,422 @@
+openapi: 3.1.0
+info:
+  title: Matter Account Search API
+  version: '1.0'
+  description: 'The Matter API lets you read, save, and organize content in your Matter library.
+
+
+    Every request requires a [Bearer token](/api/authentication) and an active
+
+    Matter Pro subscription.
+
+    '
+  contact:
+    email: hello@getmatter.com
+    url: https://getmatter.com
+servers:
+- url: https://api.getmatter.com/public
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Search
+  description: Full-text search across Matter.
+paths:
+  /v1/search:
+    get:
+      operationId: search
+      summary: Search
+      description: 'Full-text search across Matter. Results are grouped
+
+        by type, each with independent pagination. Request one or more
+
+        types and get back a keyed object with a paginated list per type.
+
+
+        Currently supported types: `items`. More types (annotations,
+
+        authors) will be added in the future.
+
+
+        Supports search operators:
+
+        - `"exact phrase"` — required phrase match
+
+        - `-excluded` — exclude term
+
+        - `by:author` — filter by author or publisher name
+
+        - `site:domain` — filter by domain
+
+        - `title:word` — match in title only
+
+        '
+      tags:
+      - Search
+      parameters:
+      - name: query
+        in: query
+        required: true
+        description: 'Search query string (min 2 characters). Supports operators: `"phrase"`, `-exclude`, `by:author`, `site:domain`, `title:word`.
+
+          '
+        schema:
+          type: string
+          minLength: 2
+        example: machine learning
+      - name: type
+        in: query
+        required: true
+        description: 'Comma-separated list of result types to include. Currently supported: `items`. Additional types will be added in future releases.
+
+          '
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: 'Filter for item results. Restricts results to items with the given status. Comma-separated for multiple. Omit to search all content. Only applies when `items` is in the `type` parameter.
+
+          '
+        schema:
+          type: string
+          enum:
+          - queue
+          - archive
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: 'Search results grouped by type. Each type key contains a paginated list of results.
+
+            '
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: validation_error
+              message: The url field is required.
+              field: url
+  headers:
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+  schemas:
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
+    Item:
+      type: object
+      required:
+      - object
+      - id
+      - title
+      - url
+      - status
+      - processing_status
+      - is_favorite
+      - content_type
+      - reading_progress
+      - tags
+      - updated_at
+      properties:
+        object:
+          type: string
+          const: item
+        id:
+          type: string
+          description: Prefixed item ID (e.g. `itm_r9f3a`).
+          example: itm_r9f3a
+        title:
+          type: string
+          example: How to Do Great Work
+        url:
+          type: string
+          format: uri
+          example: https://paulgraham.com/greatwork.html
+        site_name:
+          type: string
+          description: The source website name.
+          example: paulgraham.com
+        author:
+          oneOf:
+          - $ref: '#/components/schemas/Author'
+          - type: 'null'
+          description: The item's author, if known.
+        status:
+          type: string
+          nullable: true
+          enum:
+          - inbox
+          - queue
+          - archive
+          description: 'Status: `inbox`, `queue`, or `archive`. `null` when the item has no status (e.g. search results for content the user has not saved).
+
+            '
+          example: queue
+        processing_status:
+          type: string
+          enum:
+          - processing
+          - completed
+          - failed
+          description: Content extraction status.
+          example: completed
+        is_favorite:
+          type: boolean
+          example: false
+        content_type:
+          type: string
+          enum:
+          - article
+          - podcast
+          - pdf
+          - tweet
+          description: The type of content.
+          example: article
+        word_count:
+          type: integer
+          nullable: true
+          description: Estimated word count. `null` for non-text content.
+          example: 11842
+        reading_progress:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Reading progress from `0.0` to `1.0`.
+          example: 0.35
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          description: URL of the item's hero image, if available.
+        excerpt:
+          type: string
+          nullable: true
+          description: Short excerpt or description of the item.
+        markdown:
+          type: string
+          nullable: true
+          description: 'Parsed article body as markdown. Only included when `?include=markdown` is set.
+
+            '
+        library_position:
+          type: integer
+          format: int64
+          nullable: true
+          description: 'The item''s position in the library (queue/archive). Non-null when the item has a library entry. Higher values are closer to the top. Use this field to sort items in library order locally.
+
+            '
+          example: 58974321000
+        inbox_position:
+          type: integer
+          nullable: true
+          description: 'The item''s 0-based index in the inbox feed. Non-null when the item is in the inbox. Lower values are closer to the top. Use this field to sort items in inbox order locally.
+
+            '
+          example: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        updated_at:
+          type: string
+          format: date-time
+          description: 'Last change to this item or its associated data (status, reading progress, favorites, tags, annotations, or content re-extraction).
+
+            '
+          example: '2026-03-30T19:15:00Z'
+    SearchResults:
+      type: object
+      required:
+      - object
+      description: 'Search results grouped by type. Each requested type appears as a key containing a paginated list. Currently only `items` is supported; more types will be added in future releases.
+
+        '
+      properties:
+        object:
+          type: string
+          const: search_results
+        items:
+          description: Matching items, ranked by relevance.
+          allOf:
+          - $ref: '#/components/schemas/PaginatedList'
+          - type: object
+            properties:
+              results:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    Author:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      properties:
+        object:
+          type: string
+          const: author
+        id:
+          type: string
+          description: Prefixed author ID (e.g. `aut_p4w7q`).
+          example: aut_p4w7q
+        name:
+          type: string
+          example: Paul Graham
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+    Tag:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      - item_count
+      - created_at
+      properties:
+        object:
+          type: string
+          const: tag
+        id:
+          type: string
+          description: Prefixed tag ID (e.g. `tag_n5j2x`).
+          example: tag_n5j2x
+        name:
+          type: string
+          example: essays
+        item_count:
+          type: integer
+          description: Number of items with this tag.
+          example: 42
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-01-15T10:00:00Z'
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Personal API token with `mat_` prefix. Generate one at https://web.getmatter.com/settings.
+
+        '

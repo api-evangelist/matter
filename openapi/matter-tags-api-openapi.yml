@@ -1,0 +1,394 @@
+openapi: 3.1.0
+info:
+  title: Matter Account Tags API
+  version: '1.0'
+  description: 'The Matter API lets you read, save, and organize content in your Matter library.
+
+
+    Every request requires a [Bearer token](/api/authentication) and an active
+
+    Matter Pro subscription.
+
+    '
+  contact:
+    email: hello@getmatter.com
+    url: https://getmatter.com
+servers:
+- url: https://api.getmatter.com/public
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: Tags
+  description: Labels for organizing items.
+paths:
+  /v1/tags:
+    get:
+      operationId: listTags
+      summary: List tags
+      description: Returns all tags in your library, ordered by most recently used.
+      tags:
+      - Tags
+      parameters:
+      - $ref: '#/components/parameters/limit'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of tags.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedList'
+                - type: object
+                  properties:
+                    results:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/tags/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: The tag ID (e.g. `tag_n5j2x`).
+      schema:
+        type: string
+        pattern: ^tag_[0-9A-Za-z]+$
+    patch:
+      operationId: updateTag
+      summary: Rename tag
+      description: Rename a tag. The new name applies to all items that have this tag.
+      tags:
+      - Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: The new tag name.
+                  example: long-reads
+      responses:
+        '200':
+          description: Renamed tag.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: A tag with this name already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: conflict
+                  message: A tag with this name already exists.
+                  field: name
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteTag
+      summary: Delete tag
+      description: Permanently delete a tag and remove it from all items.
+      tags:
+      - Tags
+      responses:
+        '204':
+          description: Tag deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{item_id}/tags:
+    parameters:
+    - name: item_id
+      in: path
+      required: true
+      description: The item ID (e.g. `itm_r9f3a`).
+      schema:
+        type: string
+        pattern: ^itm_[0-9A-Za-z]+$
+    post:
+      operationId: addTagToItem
+      summary: Add tag to item
+      description: 'Add a tag to an item. Creates the tag if it doesn''t exist.
+
+        '
+      tags:
+      - Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: 'The tag name. Case-insensitive. If a tag with this name already exists, it will be reused.
+
+                    '
+                  example: essays
+      responses:
+        '200':
+          description: Tag returned (already on item).
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{item_id}/tags/{tag_id}:
+    parameters:
+    - name: item_id
+      in: path
+      required: true
+      description: The item ID (e.g. `itm_r9f3a`).
+      schema:
+        type: string
+        pattern: ^itm_[0-9A-Za-z]+$
+    - name: tag_id
+      in: path
+      required: true
+      description: The tag ID (e.g. `tag_n5j2x`).
+      schema:
+        type: string
+        pattern: ^tag_[0-9A-Za-z]+$
+    delete:
+      operationId: removeTagFromItem
+      summary: Remove tag from item
+      description: 'Remove a tag from an item. The tag itself is not deleted — only the association with this item is removed.
+
+        '
+      tags:
+      - Tags
+      responses:
+        '204':
+          description: Tag removed from item.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: not_found
+              message: The requested resource was not found.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: validation_error
+              message: The url field is required.
+              field: url
+  headers:
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+  schemas:
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+    Tag:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      - item_count
+      - created_at
+      properties:
+        object:
+          type: string
+          const: tag
+        id:
+          type: string
+          description: Prefixed tag ID (e.g. `tag_n5j2x`).
+          example: tag_n5j2x
+        name:
+          type: string
+          example: essays
+        item_count:
+          type: integer
+          description: Number of items with this tag.
+          example: 42
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-01-15T10:00:00Z'
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Personal API token with `mat_` prefix. Generate one at https://web.getmatter.com/settings.
+
+        '
