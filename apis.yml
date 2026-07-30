@@ -1,26 +1,212 @@
 aid: matter
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/matter.png
 name: Matter
-description: 'Matter is a company surfaced as a portfolio company of gv and added to the API Evangelist
-  network as a stub for enrichment. Sector: consumer. This profile is a lead awaiting the enrichment pipeline.'
+description: >-
+  Matter is a modern read-later application for people who take reading
+  seriously — save articles, newsletters, podcasts, PDFs, and tweets from
+  anywhere and read them in a clean, focused interface on iOS and the web, with
+  highlighting, notes, tags, offline search, text-to-speech, and audio
+  transcription of podcasts and videos. For Matter Pro subscribers, Matter ships
+  a public REST API (api.getmatter.com/public/v1) to save, organize, search, and
+  incrementally sync a reading library, secured with a personal Bearer token. It
+  is complemented by a first-party CLI/TUI and official Obsidian, Roam, and
+  Logseq highlight-export integrations. Matter is backed by GV (Google Ventures).
 url: https://raw.githubusercontent.com/api-evangelist/matter/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - gv
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: enriched-2026-07-20
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 22
+  pass: local-v1
 tags:
 - Company
 - Consumer
-apis: []
+- Reading
+- Read Later
+- Productivity
+- Content
+- Highlights
+- Bookmarking
+apis:
+- aid: matter:matter-account-api
+  name: Matter Account API
+  description: Your user profile and API quota.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-account-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
+- aid: matter:matter-annotations-api
+  name: Matter Annotations API
+  description: Highlights and notes on items.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Annotations
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-annotations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
+- aid: matter:matter-items-api
+  name: Matter Items API
+  description: Articles, podcasts, videos, PDFs, and tweets in your library.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Items
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-items-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
+- aid: matter:matter-reading-sessions-api
+  name: Matter Reading Sessions API
+  description: Reading time history.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Reading Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-reading-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
+- aid: matter:matter-search-api
+  name: Matter Search API
+  description: Full-text search across Matter.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-search-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
+- aid: matter:matter-tags-api
+  name: Matter Tags API
+  description: Labels for organizing items.
+  humanURL: https://docs.getmatter.com/api
+  baseURL: https://api.getmatter.com/public/v1
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/matter-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.getmatter.com/api
+  - type: APIReference
+    url: https://docs.getmatter.com/api
+  - type: Authentication
+    url: https://docs.getmatter.com/api/authentication
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DeveloperPortal
+  url: https://docs.getmatter.com
+- type: Documentation
+  url: https://docs.getmatter.com/api
+- type: APIReference
+  url: https://docs.getmatter.com/api
+- type: GettingStarted
+  url: https://docs.getmatter.com/api/quickstart
+- type: Authentication
+  url: authentication/matter-authentication.yml
+- type: Conventions
+  url: conventions/matter-conventions.yml
+- type: ErrorCatalog
+  url: errors/matter-problem-types.yml
+- type: RateLimits
+  url: rate-limits/matter-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/matter-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/matter-lifecycle.yml
+- type: DataModel
+  url: data-model/matter-data-model.yml
+- type: Conformance
+  url: conformance/matter-conformance.yml
+- type: Packages
+  url: packages/matter-packages.yml
+- type: CLI
+  url: cli/matter-cli.yml
+- type: MCPServer
+  url: mcp/matter-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/matter-agentic-access.yml
+- type: LLMsTxt
+  url: llms/matter-llms.txt
+- type: WellKnown
+  url: well-known/matter-well-known.yml
+- type: SecurityTxt
+  url: well-known/matter-security.txt
+- type: VulnerabilityDisclosure
+  url: security/matter-vulnerability-disclosure.yml
+- type: Security
+  url: security/matter-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/matter-domain-security.yml
+- type: GitHubOrganization
+  url: https://github.com/getmatterapp
+- type: Support
+  url: mailto:hello@getmatter.com
+- type: SignUp
+  url: https://web.getmatter.com
+- type: Login
+  url: https://web.getmatter.com
+- type: TermsOfService
+  url: https://www.getmatter.com/terms
+- type: PrivacyPolicy
+  url: https://www.getmatter.com/privacy
 - type: Website
-  url: http://getmatter.app
+  url: https://www.getmatter.com
