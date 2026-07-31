@@ -1,0 +1,69 @@
+generated: '2026-07-20'
+method: searched
+source: >-
+  https://docs.getmatter.com/api/errors (error-code registry + HTTP status
+  table) enriched with the 4xx/5xx responses in
+  openapi/matter-openapi-original.yml.
+format: custom-json
+rfc9457: false
+envelope:
+  shape: '{ "error": { "code": string, "message": string, "field": string|null } }'
+  fields:
+    code: Machine-readable error code for programmatic handling.
+    message: Human-readable description.
+    field: The request field that caused the error, when applicable (else null).
+http_statuses:
+  - {status: 200, meaning: OK, when: Successful read or update.}
+  - {status: 201, meaning: Created, when: New resource created.}
+  - {status: 204, meaning: No Content, when: Successful delete.}
+  - {status: 400, meaning: Bad Request, when: Invalid body, missing field, or malformed parameter.}
+  - {status: 401, meaning: Unauthorized, when: Missing or invalid API token.}
+  - {status: 403, meaning: Forbidden, when: Valid token but no Pro subscription / not permitted.}
+  - {status: 404, meaning: Not Found, when: Resource does not exist or is not owned by you.}
+  - {status: 409, meaning: Conflict, when: Resource already exists (e.g. duplicate tag name).}
+  - {status: 422, meaning: Unprocessable Entity, when: Well-formed but semantically invalid (e.g. bad URL).}
+  - {status: 429, meaning: Too Many Requests, when: Rate limit exceeded (see Retry-After).}
+  - {status: 500, meaning: Internal Server Error, when: Server-side error; retry with backoff.}
+problems:
+  - code: bad_request
+    status: 400
+    title: Bad request
+    remediation: Generic invalid request; check the request body and parameters.
+  - code: validation_error
+    status: 400
+    title: Validation error
+    remediation: A specific field failed validation; inspect the `field` property.
+  - code: unauthorized
+    status: 401
+    title: Unauthorized
+    remediation: Provide a valid `mat_` Bearer token in the Authorization header.
+    source_operation: openapi/matter-openapi-original.yml#Unauthorized
+  - code: forbidden
+    status: 403
+    title: Forbidden / Pro required
+    remediation: An active Matter Pro subscription is required to use the API.
+    source_operation: openapi/matter-openapi-original.yml#ProRequired
+  - code: not_found
+    status: 404
+    title: Resource not found
+    remediation: Verify the resource ID and that it belongs to your account.
+    source_operation: openapi/matter-openapi-original.yml#NotFound
+  - code: conflict
+    status: 409
+    title: Conflict
+    remediation: The resource already exists (e.g. a tag with this name); choose a different value.
+  - code: unprocessable
+    status: 422
+    title: Unprocessable entity
+    remediation: The request is syntactically valid but cannot be processed; check the `field`.
+    source_operation: openapi/matter-openapi-original.yml#ValidationError
+  - code: rate_limited
+    status: 429
+    title: Rate limit exceeded
+    remediation: Back off and retry after the `Retry-After` header value.
+    source_operation: openapi/matter-openapi-original.yml#RateLimited
+  - code: internal_error
+    status: 500
+    title: Internal server error
+    remediation: Transient server error; retry with exponential backoff.
+docs: https://docs.getmatter.com/api/errors

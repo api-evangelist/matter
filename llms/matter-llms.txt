@@ -1,0 +1,42 @@
+# Matter Documentation
+
+## Docs
+
+- [Get Current Account](https://docs.getmatter.com/api/account/get-me.md): Returns the authenticated user's account information and API quota.
+- [Delete Annotation](https://docs.getmatter.com/api/annotations/delete.md): Permanently delete an annotation.
+- [Get Annotation](https://docs.getmatter.com/api/annotations/get.md): Returns a single annotation.
+- [List Annotations](https://docs.getmatter.com/api/annotations/list.md): Returns all annotations for a specific item.
+- [Update Annotation](https://docs.getmatter.com/api/annotations/update.md): Set or remove the note on an annotation.
+- [Authentication](https://docs.getmatter.com/api/authentication.md): Authenticate with the Matter API using personal access tokens.
+- [Errors](https://docs.getmatter.com/api/errors.md): How the Matter API communicates errors.
+- [IDs & Object Types](https://docs.getmatter.com/api/ids.md): How resources are identified in the Matter API.
+- [Matter API](https://docs.getmatter.com/api/index.md): REST API for saving articles, managing annotations, organizing tags, and syncing your Matter reading library.
+- [Save Item](https://docs.getmatter.com/api/items/create.md): Save a new item to your library by URL.
+- [Delete Item](https://docs.getmatter.com/api/items/delete.md): Permanently remove an item from your library.
+- [Get Item](https://docs.getmatter.com/api/items/get.md): Returns a single item from your library with full metadata.
+- [List Items](https://docs.getmatter.com/api/items/list.md): Returns a paginated list of items in your library.
+- [Update Item](https://docs.getmatter.com/api/items/update.md): Update an item's properties.
+- [Pagination](https://docs.getmatter.com/api/pagination.md): Page through results with cursor-based pagination.
+- [Quickstart](https://docs.getmatter.com/api/quickstart.md): Save your first article and retrieve your library in under 5 minutes.
+- [Rate Limits](https://docs.getmatter.com/api/rate-limits.md): Understand request quotas and how to handle rate limiting.
+- [List Reading Sessions](https://docs.getmatter.com/api/reading-sessions/list.md): Returns a paginated list of reading sessions for the authenticated user.
+- [Search](https://docs.getmatter.com/api/search.md): Full-text search across Matter, grouped by type.
+- [Add Tag to Item](https://docs.getmatter.com/api/tags/add.md): Add a tag to an item. Creates the tag if it doesn't exist.
+- [Delete Tag](https://docs.getmatter.com/api/tags/delete.md): Permanently delete a tag and remove it from all items.
+- [List Tags](https://docs.getmatter.com/api/tags/list.md): Returns all tags in your library.
+- [Remove Tag from Item](https://docs.getmatter.com/api/tags/remove.md): Remove a tag from an item.
+- [Rename Tag](https://docs.getmatter.com/api/tags/update.md): Rename a tag. The new name applies to all items that have this tag.
+- [Versioning](https://docs.getmatter.com/api/versioning.md): How the Matter API is versioned and how to handle upgrades.
+- [Commands](https://docs.getmatter.com/cli/commands.md): Full reference for every Matter CLI command.
+- [Matter CLI](https://docs.getmatter.com/cli/index.md): Terminal client for your Matter reading library — CLI mode for scripting and an interactive TUI for browsing.
+- [Quickstart](https://docs.getmatter.com/cli/quickstart.md): Install and use the Matter CLI to manage your reading library from the terminal.
+- [Interactive TUI](https://docs.getmatter.com/cli/tui.md): Browse and manage your Matter library visually in the terminal.
+- [Matter Documentation](https://docs.getmatter.com/index.md): API reference, CLI tools, and developer guides for the Matter read-later app.
+
+## OpenAPI Specs
+
+- [openapi](https://docs.getmatter.com/openapi.yaml)
+
+## Optional
+
+- [Matter App](https://web.getmatter.com)

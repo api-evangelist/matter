@@ -1,0 +1,36 @@
+generated: '2026-07-20'
+method: searched
+source: Live probes of the Matter API and website hosts.
+hosts:
+- host: https://api.getmatter.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: matter-security.txt
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.getmatter.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+notes: >-
+  api.getmatter.com serves an RFC 9116 security.txt (saved verbatim as
+  matter-security.txt) with a security contact and a Canonical/Policy pointer to
+  getmatter.com. The file's Expires date is stale (2023) and the linked
+  vulnerability_disclosure_policy page currently returns 404, but the security
+  contact (security@getmatter.com) is live. No OIDC/OAuth discovery or
+  api-catalog documents are published (bearer-token auth, no OAuth).

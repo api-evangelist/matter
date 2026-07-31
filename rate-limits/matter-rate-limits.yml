@@ -1,0 +1,61 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: Matter
+providerId: matter
+generated: '2026-07-20'
+created: '2026-07-20'
+modified: '2026-07-20'
+method: searched
+source: https://docs.getmatter.com/api/rate-limits
+tags:
+  - Rate Limiting
+  - Consumer
+description: >-
+  Matter enforces per-user (per API token) rate limits across tiered operation
+  classes, all per-minute except the per-second burst ceiling. Every response
+  carries X-RateLimit-* headers; 429 responses include Retry-After.
+headers:
+  limit: X-RateLimit-Limit
+  remaining: X-RateLimit-Remaining
+  reset: X-RateLimit-Reset
+  retryAfter: Retry-After
+responseCodes:
+  throttled: 429
+scope: token
+limits:
+  - name: Read
+    scope: token
+    metric: requests_per_minute
+    limit: 120
+    timeFrame: minute
+    appliesTo: All GET requests.
+  - name: Write
+    scope: token
+    metric: requests_per_minute
+    limit: 30
+    timeFrame: minute
+    appliesTo: POST, PATCH, DELETE requests.
+  - name: Save
+    scope: token
+    metric: requests_per_minute
+    limit: 10
+    timeFrame: minute
+    appliesTo: POST /v1/items (each triggers background extraction).
+  - name: Search
+    scope: token
+    metric: requests_per_minute
+    limit: 30
+    timeFrame: minute
+    appliesTo: GET /v1/search.
+  - name: Markdown
+    scope: token
+    metric: requests_per_minute
+    limit: 20
+    timeFrame: minute
+    appliesTo: GET requests with ?include=markdown (also count against Read).
+  - name: Burst
+    scope: token
+    metric: requests_per_second
+    limit: 5
+    timeFrame: second
+    appliesTo: All requests (short-term ceiling).

@@ -1,0 +1,1299 @@
+openapi: 3.1.0
+info:
+  title: Matter API
+  version: '1.0'
+  description: >
+    The Matter API lets you read, save, and organize content in your Matter
+    library.
+
+
+    Every request requires a [Bearer token](/api/authentication) and an active
+
+    Matter Pro subscription.
+  contact:
+    email: hello@getmatter.com
+    url: https://getmatter.com
+servers:
+  - url: https://api.getmatter.com/public
+    description: Production
+security:
+  - bearerAuth: []
+tags:
+  - name: Account
+    description: Your user profile and API quota.
+  - name: Annotations
+    description: Highlights and notes on items.
+  - name: Items
+    description: Articles, podcasts, videos, PDFs, and tweets in your library.
+  - name: Reading Sessions
+    description: Reading time history.
+  - name: Search
+    description: Full-text search across Matter.
+  - name: Tags
+    description: Labels for organizing items.
+paths:
+  /v1/me:
+    get:
+      operationId: getMe
+      summary: Get current account
+      description: >-
+        Returns the authenticated user's account information and rate-limit
+        quota.
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Account info.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+              example:
+                object: account
+                id: act_k8x2m
+                name: Jane Smith
+                email: jane@example.com
+                rate_limit:
+                  read: 120
+                  write: 30
+                  save: 10
+                  search: 30
+                  markdown: 20
+                  burst: 5
+                created_at: '2024-06-15T10:30:00Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items:
+    get:
+      operationId: listItems
+      summary: List items
+      description: Returns a paginated list of items in your library.
+      tags:
+        - Items
+      parameters:
+        - name: status
+          in: query
+          description: |
+            Filter by item status. Comma-separated for multiple values.
+          schema:
+            type: string
+            default: all
+            enum:
+              - all
+              - inbox
+              - queue
+              - archive
+        - name: order
+          in: query
+          description: >
+            Sort order. `updated` sorts by last-updated timestamp (default, best
+            for sync). `library_position` sorts by the item's manual queue
+            ordering (queue_order). `inbox_position` sorts by the item's feed
+            position (newest first). Neither position ordering requires a status
+            filter — items without a position sort last (nulls last).
+          schema:
+            type: string
+            default: updated
+            enum:
+              - updated
+              - library_position
+              - inbox_position
+        - name: is_favorite
+          in: query
+          description: Filter to favorited items only.
+          schema:
+            type: boolean
+        - name: tag
+          in: query
+          description: >
+            Filter to items with a specific tag ID. Comma-separated for multiple
+            (matches **any**).
+          schema:
+            type: string
+            example: tag_n5j2x,tag_k3m9p
+        - name: content_type
+          in: query
+          description: |
+            Filter by content type. Comma-separated for multiple.
+          schema:
+            type: string
+            enum:
+              - article
+              - podcast
+              - pdf
+              - tweet
+        - name: updated_since
+          in: query
+          description: >
+            ISO 8601 timestamp. Return only items updated after this time.
+            Useful for incremental sync.
+          schema:
+            type: string
+            format: date-time
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of items.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedList'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createItem
+      summary: Save item
+      description: |
+        Save a new item to your library by URL. Triggers background content
+        extraction. Check `processing_status` to know when the item is ready.
+
+        About 40% of saves complete instantly (cached content). For the rest,
+        processing typically takes 20–60 seconds.
+      tags:
+        - Items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: >-
+                    The URL to save. Must be a valid `http://` or `https://`
+                    URL.
+                  example: https://paulgraham.com/greatwork.html
+                status:
+                  type: string
+                  enum:
+                    - queue
+                    - archive
+                  default: queue
+                  description: Where to place the item.
+      responses:
+        '201':
+          description: Item saved.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The item ID (e.g. `itm_r9f3a`).
+        schema:
+          type: string
+          pattern: ^itm_[0-9A-Za-z]+$
+    get:
+      operationId: getItem
+      summary: Get item
+      description: Returns a single item from your library with full metadata.
+      tags:
+        - Items
+      parameters:
+        - name: include
+          in: query
+          description: >
+            Comma-separated list of additional fields. Currently supported:
+            `markdown`. Markdown requests count against the content rate limit
+            (20/min).
+          schema:
+            type: string
+            example: markdown
+      responses:
+        '200':
+          description: Item detail.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateItem
+      summary: Update item
+      description: Update an item's status, favorite state, or reading progress.
+      tags:
+        - Items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - queue
+                    - archive
+                  description: Move the item to `queue` or `archive`.
+                is_favorite:
+                  type: boolean
+                  description: Set to `true` to favorite, `false` to unfavorite.
+                reading_progress:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 1
+                  description: Reading progress as a float from `0.0` to `1.0`.
+      responses:
+        '200':
+          description: Updated item.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteItem
+      summary: Delete item
+      description: Permanently remove an item from your library.
+      tags:
+        - Items
+      responses:
+        '204':
+          description: Item deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/search:
+    get:
+      operationId: search
+      summary: Search
+      description: |
+        Full-text search across Matter. Results are grouped
+        by type, each with independent pagination. Request one or more
+        types and get back a keyed object with a paginated list per type.
+
+        Currently supported types: `items`. More types (annotations,
+        authors) will be added in the future.
+
+        Supports search operators:
+        - `"exact phrase"` — required phrase match
+        - `-excluded` — exclude term
+        - `by:author` — filter by author or publisher name
+        - `site:domain` — filter by domain
+        - `title:word` — match in title only
+      tags:
+        - Search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: >
+            Search query string (min 2 characters). Supports operators:
+            `"phrase"`, `-exclude`, `by:author`, `site:domain`, `title:word`.
+          schema:
+            type: string
+            minLength: 2
+          example: machine learning
+        - name: type
+          in: query
+          required: true
+          description: >
+            Comma-separated list of result types to include. Currently
+            supported: `items`. Additional types will be added in future
+            releases.
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: >
+            Filter for item results. Restricts results to items with the given
+            status. Comma-separated for multiple. Omit to search all content.
+            Only applies when `items` is in the `type` parameter.
+          schema:
+            type: string
+            enum:
+              - queue
+              - archive
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: >
+            Search results grouped by type. Each type key contains a paginated
+            list of results.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResults'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/reading_sessions:
+    get:
+      operationId: listReadingSessions
+      summary: List reading sessions
+      description: >
+        Returns a paginated list of reading sessions for the authenticated user,
+
+        ordered by date descending (newest first).
+
+
+        Each session records a single reading period with a timestamp and
+        duration.
+
+        Use these to compute reading streaks, daily totals, or other time-based
+
+        statistics client-side.
+      tags:
+        - Reading Sessions
+      parameters:
+        - name: since
+          in: query
+          description: >
+            Only return sessions on or after this ISO 8601 datetime. Useful for
+            incremental sync.
+          schema:
+            type: string
+            format: date-time
+          example: '2026-04-01T00:00:00Z'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of reading sessions.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedList'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReadingSession'
+              example:
+                object: list
+                results:
+                  - object: reading_session
+                    id: rs_k8x2m
+                    date: '2026-04-09T14:23:00Z'
+                    seconds_read: 180
+                  - object: reading_session
+                    id: rs_j7w1n
+                    date: '2026-04-09T08:12:00Z'
+                    seconds_read: 162
+                  - object: reading_session
+                    id: rs_h6v0p
+                    date: '2026-04-08T21:45:00Z'
+                    seconds_read: 480
+                has_more: true
+                next_cursor: eyJ1YSI6MTc...
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{item_id}/annotations:
+    parameters:
+      - name: item_id
+        in: path
+        required: true
+        description: The item ID (e.g. `itm_r9f3a`).
+        schema:
+          type: string
+          pattern: ^itm_[0-9A-Za-z]+$
+    get:
+      operationId: listAnnotations
+      summary: List annotations
+      description: Returns all annotations for a specific item.
+      tags:
+        - Annotations
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of annotations.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedList'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Annotation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/annotations/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The annotation ID (e.g. `ann_m2k8v`).
+        schema:
+          type: string
+          pattern: ^ann_[0-9A-Za-z]+$
+    get:
+      operationId: getAnnotation
+      summary: Get annotation
+      description: Returns a single annotation.
+      tags:
+        - Annotations
+      responses:
+        '200':
+          description: Annotation detail.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateAnnotation
+      summary: Update annotation
+      description: Set or remove the note on an annotation.
+      tags:
+        - Annotations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - note
+              properties:
+                note:
+                  type: string
+                  nullable: true
+                  description: The note text. Pass `null` to remove the note.
+      responses:
+        '200':
+          description: Updated annotation.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteAnnotation
+      summary: Delete annotation
+      description: Permanently delete an annotation.
+      tags:
+        - Annotations
+      responses:
+        '204':
+          description: Annotation deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/tags:
+    get:
+      operationId: listTags
+      summary: List tags
+      description: Returns all tags in your library, ordered by most recently used.
+      tags:
+        - Tags
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Paginated list of tags.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedList'
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/tags/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The tag ID (e.g. `tag_n5j2x`).
+        schema:
+          type: string
+          pattern: ^tag_[0-9A-Za-z]+$
+    patch:
+      operationId: updateTag
+      summary: Rename tag
+      description: Rename a tag. The new name applies to all items that have this tag.
+      tags:
+        - Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: The new tag name.
+                  example: long-reads
+      responses:
+        '200':
+          description: Renamed tag.
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: A tag with this name already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: conflict
+                  message: A tag with this name already exists.
+                  field: name
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteTag
+      summary: Delete tag
+      description: Permanently delete a tag and remove it from all items.
+      tags:
+        - Tags
+      responses:
+        '204':
+          description: Tag deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{item_id}/tags:
+    parameters:
+      - name: item_id
+        in: path
+        required: true
+        description: The item ID (e.g. `itm_r9f3a`).
+        schema:
+          type: string
+          pattern: ^itm_[0-9A-Za-z]+$
+    post:
+      operationId: addTagToItem
+      summary: Add tag to item
+      description: |
+        Add a tag to an item. Creates the tag if it doesn't exist.
+      tags:
+        - Tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: >
+                    The tag name. Case-insensitive. If a tag with this name
+                    already exists, it will be reused.
+                  example: essays
+      responses:
+        '200':
+          description: Tag returned (already on item).
+          headers:
+            X-RateLimit-Limit:
+              $ref: '#/components/headers/X-RateLimit-Limit'
+            X-RateLimit-Remaining:
+              $ref: '#/components/headers/X-RateLimit-Remaining'
+            X-RateLimit-Reset:
+              $ref: '#/components/headers/X-RateLimit-Reset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /v1/items/{item_id}/tags/{tag_id}:
+    parameters:
+      - name: item_id
+        in: path
+        required: true
+        description: The item ID (e.g. `itm_r9f3a`).
+        schema:
+          type: string
+          pattern: ^itm_[0-9A-Za-z]+$
+      - name: tag_id
+        in: path
+        required: true
+        description: The tag ID (e.g. `tag_n5j2x`).
+        schema:
+          type: string
+          pattern: ^tag_[0-9A-Za-z]+$
+    delete:
+      operationId: removeTagFromItem
+      summary: Remove tag from item
+      description: >
+        Remove a tag from an item. The tag itself is not deleted — only the
+        association with this item is removed.
+      tags:
+        - Tags
+      responses:
+        '204':
+          description: Tag removed from item.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ProRequired'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >
+        Personal API token with `mat_` prefix. Generate one at
+        https://web.getmatter.com/settings.
+  parameters:
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+    cursor:
+      name: cursor
+      in: query
+      description: >-
+        Opaque cursor for the next page of results, from a previous
+        `next_cursor`.
+      schema:
+        type: string
+  headers:
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+  schemas:
+    Account:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - email
+        - rate_limit
+        - created_at
+      properties:
+        object:
+          type: string
+          const: account
+        id:
+          type: string
+          description: Prefixed account ID (e.g. `act_k8x2m`).
+          example: act_k8x2m
+        name:
+          type: string
+          example: Jane Smith
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        rate_limit:
+          $ref: '#/components/schemas/RateLimit'
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-06-15T10:30:00Z'
+    RateLimit:
+      type: object
+      description: Per-minute quotas (except burst which is per-second).
+      required:
+        - read
+        - write
+        - save
+        - markdown
+        - burst
+      properties:
+        read:
+          type: integer
+          description: GET requests per minute.
+          example: 120
+        write:
+          type: integer
+          description: POST/PATCH/DELETE requests per minute.
+          example: 30
+        save:
+          type: integer
+          description: POST /v1/items per minute.
+          example: 10
+        search:
+          type: integer
+          description: GET /v1/search per minute.
+          example: 30
+        markdown:
+          type: integer
+          description: GET with `?include=markdown` per minute.
+          example: 20
+        burst:
+          type: integer
+          description: All requests per second.
+          example: 5
+    ReadingSession:
+      type: object
+      required:
+        - object
+        - id
+        - date
+        - seconds_read
+      properties:
+        object:
+          type: string
+          const: reading_session
+        id:
+          type: string
+          description: Prefixed reading session ID (e.g. `rs_k8x2m`).
+          example: rs_k8x2m
+        date:
+          type: string
+          format: date-time
+          description: When the reading session occurred (UTC).
+          example: '2026-04-09T14:23:00Z'
+        seconds_read:
+          type: integer
+          description: Duration of the session in seconds.
+          example: 180
+    Author:
+      type: object
+      required:
+        - object
+        - id
+        - name
+      properties:
+        object:
+          type: string
+          const: author
+        id:
+          type: string
+          description: Prefixed author ID (e.g. `aut_p4w7q`).
+          example: aut_p4w7q
+        name:
+          type: string
+          example: Paul Graham
+    Tag:
+      type: object
+      required:
+        - object
+        - id
+        - name
+        - item_count
+        - created_at
+      properties:
+        object:
+          type: string
+          const: tag
+        id:
+          type: string
+          description: Prefixed tag ID (e.g. `tag_n5j2x`).
+          example: tag_n5j2x
+        name:
+          type: string
+          example: essays
+        item_count:
+          type: integer
+          description: Number of items with this tag.
+          example: 42
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-01-15T10:00:00Z'
+    Annotation:
+      type: object
+      required:
+        - object
+        - id
+        - item_id
+        - text
+        - created_at
+        - updated_at
+      properties:
+        object:
+          type: string
+          const: annotation
+        id:
+          type: string
+          description: Prefixed annotation ID (e.g. `ann_m2k8v`).
+          example: ann_m2k8v
+        item_id:
+          type: string
+          description: The parent item ID.
+          example: itm_r9f3a
+        text:
+          type: string
+          description: The highlighted text.
+          example: The way to figure out what to work on is by working.
+        note:
+          type: string
+          nullable: true
+          description: User-added note, if any.
+          example: Core thesis of the essay
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-03-30T18:32:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2026-03-30T18:32:00Z'
+    Item:
+      type: object
+      required:
+        - object
+        - id
+        - title
+        - url
+        - status
+        - processing_status
+        - is_favorite
+        - content_type
+        - reading_progress
+        - tags
+        - updated_at
+      properties:
+        object:
+          type: string
+          const: item
+        id:
+          type: string
+          description: Prefixed item ID (e.g. `itm_r9f3a`).
+          example: itm_r9f3a
+        title:
+          type: string
+          example: How to Do Great Work
+        url:
+          type: string
+          format: uri
+          example: https://paulgraham.com/greatwork.html
+        site_name:
+          type: string
+          description: The source website name.
+          example: paulgraham.com
+        author:
+          oneOf:
+            - $ref: '#/components/schemas/Author'
+            - type: 'null'
+          description: The item's author, if known.
+        status:
+          type: string
+          nullable: true
+          enum:
+            - inbox
+            - queue
+            - archive
+          description: >
+            Status: `inbox`, `queue`, or `archive`. `null` when the item has no
+            status (e.g. search results for content the user has not saved).
+          example: queue
+        processing_status:
+          type: string
+          enum:
+            - processing
+            - completed
+            - failed
+          description: Content extraction status.
+          example: completed
+        is_favorite:
+          type: boolean
+          example: false
+        content_type:
+          type: string
+          enum:
+            - article
+            - podcast
+            - pdf
+            - tweet
+          description: The type of content.
+          example: article
+        word_count:
+          type: integer
+          nullable: true
+          description: Estimated word count. `null` for non-text content.
+          example: 11842
+        reading_progress:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Reading progress from `0.0` to `1.0`.
+          example: 0.35
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          description: URL of the item's hero image, if available.
+        excerpt:
+          type: string
+          nullable: true
+          description: Short excerpt or description of the item.
+        markdown:
+          type: string
+          nullable: true
+          description: >
+            Parsed article body as markdown. Only included when
+            `?include=markdown` is set.
+        library_position:
+          type: integer
+          format: int64
+          nullable: true
+          description: >
+            The item's position in the library (queue/archive). Non-null when
+            the item has a library entry. Higher values are closer to the top.
+            Use this field to sort items in library order locally.
+          example: 58974321000
+        inbox_position:
+          type: integer
+          nullable: true
+          description: >
+            The item's 0-based index in the inbox feed. Non-null when the item
+            is in the inbox. Lower values are closer to the top. Use this field
+            to sort items in inbox order locally.
+          example: 0
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        updated_at:
+          type: string
+          format: date-time
+          description: >
+            Last change to this item or its associated data (status, reading
+            progress, favorites, tags, annotations, or content re-extraction).
+          example: '2026-03-30T19:15:00Z'
+    SearchResults:
+      type: object
+      required:
+        - object
+      description: >
+        Search results grouped by type. Each requested type appears as a key
+        containing a paginated list. Currently only `items` is supported; more
+        types will be added in future releases.
+      properties:
+        object:
+          type: string
+          const: search_results
+        items:
+          description: Matching items, ranked by relevance.
+          allOf:
+            - $ref: '#/components/schemas/PaginatedList'
+            - type: object
+              properties:
+                results:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Item'
+    PaginatedList:
+      type: object
+      required:
+        - object
+        - results
+        - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: >-
+            Cursor to fetch the next page. `null` when there are no more
+            results.
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+  responses:
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: not_found
+              message: The requested resource was not found.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: validation_error
+              message: The url field is required.
+              field: url
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.

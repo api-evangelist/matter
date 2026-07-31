@@ -1,0 +1,47 @@
+generated: '2026-07-20'
+method: derived
+source: >-
+  Derived from openapi/matter-openapi-original.yml and the Matter developer docs
+  (authentication, errors, pagination, versioning). Asserts cross-cutting
+  standard conformance; no published compliance/certification program was found.
+standards:
+  - id: oauth2
+    conforms: false
+    evidence: Auth is a single HTTP Bearer personal token; no OAuth2 flows.
+  - id: oidc
+    conforms: false
+    evidence: No openid-configuration; no OpenID Connect.
+  - id: http-bearer-rfc6750
+    conforms: true
+    evidence: Authorization Bearer token on every request (securityScheme http/bearer).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use a custom { error: { code, message, field } } envelope with
+      application/json, not application/problem+json.
+  - id: rfc8594-sunset-header
+    conforms: true
+    evidence: Deprecated API versions emit Sunset and Deprecation headers (versioning docs).
+  - id: cursor-pagination
+    conforms: true
+    evidence: All list endpoints use opaque cursor + has_more + next_cursor.
+  - id: rfc6585-429-rate-limit
+    conforms: true
+    evidence: 429 Too Many Requests with Retry-After and X-RateLimit-* headers.
+  - id: iso8601-timestamps
+    conforms: true
+    evidence: All timestamps are ISO 8601 UTC strings.
+  - id: json-api
+    conforms: false
+    evidence: Custom resource envelope (object/results), not JSON:API.
+  - id: fhir
+    conforms: false
+  - id: scim
+    conforms: false
+compliance_program:
+  published: false
+  note: >-
+    No trust center, SOC 2 / ISO 27001 / HIPAA / GDPR certification page, or bug
+    bounty program was found. A security.txt with a contact exists
+    (well-known/matter-security.txt); the linked disclosure policy page is
+    currently unavailable.

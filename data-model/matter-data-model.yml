@@ -1,0 +1,32 @@
+generated: '2026-07-20'
+method: derived
+source: >-
+  Derived from the schemas and id-reference fields in
+  openapi/matter-openapi-original.yml and the IDs & Object Types reference
+  (docs.getmatter.com/api/ids).
+docs: https://docs.getmatter.com/api/ids
+notation: >-
+  relationships use has_one / has_many / belongs_to with the reference field
+  name; direction is from the entity that owns the reference.
+entities:
+  - {name: Account, id_prefix: act_, description: The authenticated user profile and API quota.}
+  - {name: Item, id_prefix: itm_, description: A saved piece of content (article, podcast, pdf, tweet) in the library.}
+  - {name: Annotation, id_prefix: ann_, description: A highlight (text) plus optional note on an item.}
+  - {name: Tag, id_prefix: tag_, description: A user label for organizing items.}
+  - {name: Author, id_prefix: aut_, description: The author of an item, when known.}
+  - {name: ReadingSession, id_prefix: rs_, description: A single reading period with a timestamp and duration.}
+relationships:
+  - {from: Item, to: Author, type: has_one, via: author, note: Nullable; embedded object.}
+  - {from: Item, to: Tag, type: has_many, via: tags, note: Embedded array of tag objects.}
+  - {from: Item, to: Annotation, type: has_many, via: item_id, note: Annotations reference their parent item.}
+  - {from: Annotation, to: Item, type: belongs_to, via: item_id}
+  - {from: Tag, to: Item, type: has_many, via: item_count, note: item_count is the number of items carrying the tag (many-to-many via item.tags).}
+  - {from: ReadingSession, to: Account, type: belongs_to, via: authenticated-user, note: Sessions belong to the token owner; not linked to a specific item in the public API.}
+enums:
+  item_status: [inbox, queue, archive]
+  processing_status: [processing, completed, failed]
+  content_type: [article, podcast, pdf, tweet]
+notes: >-
+  Items also carry ordering fields library_position (queue/archive manual order)
+  and inbox_position (feed order) for local sorting. Search returns Item objects
+  which may have null status when the content is not saved in the user library.

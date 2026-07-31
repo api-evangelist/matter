@@ -1,0 +1,32 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.getmatter.com/api/versioning
+versioning:
+  scheme: uri-path
+  current: v1
+  status: active
+  docs: https://docs.getmatter.com/api/versioning
+  base_url: https://api.getmatter.com/public/v1/
+compatibility_promise: >-
+  Within a version Matter makes no breaking changes: existing fields are not
+  removed or renamed, endpoints are not removed, error codes do not change
+  meaning, and response shapes are stable. Non-breaking additions (new optional
+  fields, endpoints, query params, error codes) may ship within a version.
+  Clients are advised to ignore unknown fields for forward compatibility.
+deprecation:
+  policy_url: https://docs.getmatter.com/api/versioning
+  min_deprecation_period: 6 months
+  sunset_header: true
+  deprecation_header: true
+  headers:
+    sunset_example: 'Sunset: Sat, 01 Nov 2027 00:00:00 GMT'
+    deprecation_example: 'Deprecation: true'
+  notification: Email notice before a version is sunset.
+sla: null
+status_page: null
+deprecated_operations: []
+notes: >-
+  Matter follows RFC 8594 (Sunset) with an explicit Deprecation header on
+  deprecated versions and a minimum 6-month deprecation window. Only v1 is
+  active — no versions are currently deprecated. No public status page or
+  published SLA was found.

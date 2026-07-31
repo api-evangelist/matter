@@ -1,0 +1,47 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.getmatter.com/cli
+name: Matter CLI
+binary: matter
+package: packages/matter-packages.yml
+repo: https://github.com/getmatterapp/matter-cli
+requires: Matter Pro subscription
+description: >-
+  Terminal client for the Matter reading library. CLI mode emits JSON by default
+  (add --plain for human-readable tables) for scripting/piping to jq; also ships
+  an interactive TUI for visual browsing. Self-updating.
+install:
+  - platform: macOS / Linux
+    command: curl -fsSL https://cli.getmatter.com/install.sh | sh
+  - platform: Windows
+    command: irm https://cli.getmatter.com/install.ps1 | iex
+  - platform: from source
+    command: git clone https://github.com/getmatterapp/matter-cli.git && bun install
+auth:
+  command: matter login
+  detail: Opens a browser to copy the API token, or pass it directly / via stdin. Stored at ~/.config/matter/config.json.
+config_path: ~/.config/matter/config.json
+output_formats: [json (default), plain]
+readonly_mode: Optional readonly mode rejects all write commands (save/update/delete).
+commands:
+  - group: account
+    commands: [account]
+  - group: items
+    commands: [items list, items get, items save, items update, items delete]
+  - group: search
+    commands: [search]
+    operators: ['"phrase"', -term, 'by:name', 'site:domain', 'title:word']
+  - group: annotations
+    commands: [annotations list, annotations get, annotations update, annotations delete]
+  - group: tags
+    commands: [tags list, tags rename, tags delete, tags add, tags remove]
+  - group: auth
+    commands: [login]
+  - group: tui
+    commands: [tui]
+  - group: maintenance
+    commands: [update, version]
+tui:
+  launch: matter (no args) or matter tui
+  docs: https://docs.getmatter.com/cli/tui
+docs: https://docs.getmatter.com/cli/commands

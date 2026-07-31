@@ -1,0 +1,49 @@
+generated: '2026-07-20'
+method: searched
+source: >-
+  Matter developer docs (docs.getmatter.com/cli) and the getmatterapp GitHub
+  organization (github.com/getmatterapp). Matter publishes a first-party CLI and
+  official read-app integration plugins, but no general-purpose language SDK /
+  API client library was found on npm, PyPI, or other registries as of this pass.
+notes: >-
+  The Matter API has no published server-side SDK client library — the docs show
+  raw cURL / Python (requests) / JavaScript (fetch) examples only. The packages
+  below are the first-party distributed tools: the CLI/TUI and the note-app
+  export integrations. All are official (getmatterapp org).
+packages:
+- name: matter-cli
+  kind: cli
+  language: typescript
+  runtime: bun
+  registry: github
+  repo: https://github.com/getmatterapp/matter-cli
+  install: curl -fsSL https://cli.getmatter.com/install.sh | sh
+  install_windows: irm https://cli.getmatter.com/install.ps1 | iex
+  official: true
+  description: >-
+    Terminal client for the Matter reading library — CLI mode (JSON output for
+    scripting) plus an interactive TUI. Self-updating binary.
+- name: obsidian-matter
+  kind: integration-plugin
+  language: typescript
+  platform: Obsidian
+  registry: github
+  repo: https://github.com/getmatterapp/obsidian-matter
+  official: true
+  description: Official Obsidian plugin that syncs Matter highlights and annotations into an Obsidian vault.
+- name: roam-matter
+  kind: integration-plugin
+  language: typescript
+  platform: Roam Research
+  registry: github
+  repo: https://github.com/getmatterapp/roam-matter
+  official: true
+  description: Official Roam Research integration for importing Matter highlights.
+- name: logseq-matter
+  kind: integration-plugin
+  language: typescript
+  platform: Logseq
+  registry: github
+  repo: https://github.com/getmatterapp/logseq-matter
+  official: true
+  description: Official Logseq integration for importing Matter highlights.

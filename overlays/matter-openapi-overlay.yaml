@@ -1,0 +1,30 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Matter API
+  version: 1.0.0
+extends: openapi/matter-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: matter
+      x-apievangelist-review-date: '2026-07-20'
+      x-apievangelist-artifacts:
+        authentication: authentication/matter-authentication.yml
+        conventions: conventions/matter-conventions.yml
+        errors: errors/matter-problem-types.yml
+        rate-limits: rate-limits/matter-rate-limits.yml
+        lifecycle: lifecycle/matter-lifecycle.yml
+        data-model: data-model/matter-data-model.yml
+        cli: cli/matter-cli.yml
+        agentic-access: agentic-access/matter-agentic-access.yml
+  - target: $.info
+    update:
+      x-apievangelist-notes: >-
+        Well-documented single-tenant read-later API. Bearer personal token
+        (mat_), requires Matter Pro. Cursor pagination, custom error envelope
+        (not RFC 9457), RFC 8594 Sunset deprecation, tiered per-minute rate
+        limits. No OAuth, no webhooks/events, no sandbox mode.
+  - target: $.tags
+    update:
+      - name: Reading Sessions
+        description: Reading time history (used for streaks and stats).

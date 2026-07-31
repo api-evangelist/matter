@@ -1,0 +1,70 @@
+generated: '2026-07-20'
+method: searched
+source: >-
+  https://docs.getmatter.com/api (index, pagination, errors, rate-limits,
+  versioning, ids) plus openapi/matter-openapi-original.yml.
+base_url: https://api.getmatter.com/public/v1/
+authentication:
+  style: bearer-token
+  header: Authorization
+  format: 'Bearer mat_...'
+  detail: authentication/matter-authentication.yml
+request_format:
+  content_type: application/json
+  bodies: JSON for POST/PATCH; query params for filtering and pagination.
+identifiers:
+  style: prefixed-opaque-string
+  object_field: Every resource carries an `object` field naming its type.
+  prefixes:
+    account: act_
+    item: itm_
+    annotation: ann_
+    tag: tag_
+    author: aut_
+    reading_session: rs_
+  docs: https://docs.getmatter.com/api/ids
+pagination:
+  style: cursor
+  params:
+    limit: {default: 25, min: 1, max: 100}
+    cursor: Opaque cursor from the previous response's next_cursor.
+  response_fields: [object, results, has_more, next_cursor]
+  incremental_sync:
+    param: updated_since
+    field: updated_at
+    note: >-
+      updated_at advances on any change to an item or its associated data
+      (status, progress, favorite, tags, annotations, re-extraction). Use
+      updated_since + order=updated for delta sync.
+  multi_value_filters: Comma-separated values use OR logic (status, content_type, tag).
+  docs: https://docs.getmatter.com/api/pagination
+ordering:
+  default: updated (updated_at descending)
+  options: [updated, library_position, inbox_position]
+idempotency:
+  key_header: null
+  supported: false
+  natural_idempotency: >-
+    There is no Idempotency-Key header. Saving a URL already in the library is
+    idempotent by URL — the existing item is returned with HTTP 200 instead of
+    creating a duplicate (201). Adding an existing tag name to an item is
+    likewise a no-op returning the existing tag. This is natural, not a
+    retry-safety key contract.
+error_envelope:
+  shape: '{ "error": { "code": string, "message": string, "field": string|null } }'
+  format: custom-json
+  rfc9457: false
+  detail: errors/matter-problem-types.yml
+  docs: https://docs.getmatter.com/api/errors
+rate_limit_signaling:
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset]
+  retry_after: Retry-After (seconds) on 429.
+  detail: rate-limits/matter-rate-limits.yml
+  docs: https://docs.getmatter.com/api/rate-limits
+versioning:
+  detail: lifecycle/matter-lifecycle.yml
+  docs: https://docs.getmatter.com/api/versioning
+timestamps: ISO 8601, UTC (e.g. 2026-03-30T18:30:00Z).
+async_processing: >-
+  POST /v1/items triggers background content extraction; poll processing_status
+  (processing -> completed | failed). ~40% of saves complete instantly (cached).

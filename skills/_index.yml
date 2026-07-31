@@ -1,0 +1,17 @@
+generated: '2026-07-20'
+method: generated
+source: >-
+  Generated from openapi/matter-openapi-original.yml; every operationId is
+  verified present in the spec. No provider-published Agent Skills / AGENTS.md
+  were found on docs.getmatter.com or the getmatterapp GitHub org.
+api: openapi/matter-openapi-original.yml
+skills:
+  - file: matter-save-and-organize.md
+    name: Save and organize an article in Matter
+    operations: [createItem, getItem, addTagToItem, updateItem]
+  - file: matter-sync-library.md
+    name: Incrementally sync a Matter library
+    operations: [listItems, listReadingSessions]
+  - file: matter-search-and-read.md
+    name: Search Matter and read an item with its highlights
+    operations: [search, getItem, listAnnotations]

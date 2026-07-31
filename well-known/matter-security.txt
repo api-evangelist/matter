@@ -1,0 +1,5 @@
+Contact: mailto:security@getmatter.com
+Expires: 2023-05-01T07:00:00.000Z
+Preferred-Languages: en
+Canonical: https://getmatter.com/.well-known/security.txt
+Policy: https://getmatter.com/vulnerability_disclosure_policy/

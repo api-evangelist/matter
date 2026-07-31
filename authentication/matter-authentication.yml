@@ -1,0 +1,29 @@
+generated: '2026-07-20'
+method: searched
+source: openapi/matter-openapi-original.yml
+docs: https://docs.getmatter.com/api/authentication
+summary:
+  types:
+  - http
+  http_schemes:
+  - bearer
+model: >-
+  Single personal access token per account, passed as an HTTP Bearer token in
+  the Authorization header on every request. Tokens carry the `mat_` prefix and
+  grant full read/write access to the owner's library. Only one token is active
+  at a time — generating or regenerating immediately revokes the previous token.
+  There are no OAuth flows, refresh tokens, or scopes. Every request also
+  requires an active Matter Pro subscription (403 pro_required otherwise).
+token:
+  prefix: mat_
+  generate_at: https://web.getmatter.com/settings
+  one_active_token: true
+  rotation: Generating a new token immediately revokes the previous one.
+requires_subscription: Matter Pro
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: Personal API token with `mat_` prefix. Generate one at https://web.getmatter.com/settings.
+  sources:
+  - openapi/matter-openapi-original.yml

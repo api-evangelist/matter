@@ -1,0 +1,66 @@
+generated: '2026-07-20'
+method: derived
+status: candidate
+source: >-
+  Derived from openapi/matter-openapi-original.yml. No official hosted/remote
+  Matter MCP server was found in the docs, the getmatterapp GitHub org, or the
+  MCP registries as of this pass. This is a candidate tool surface (one tool per
+  operation) that a Matter MCP server could expose; the first-party terminal
+  surface today is the Matter CLI (cli/matter-cli.yml).
+server:
+  name: matter
+  transport: http
+  url: null
+  auth: Bearer mat_ personal token; requires Matter Pro.
+tools:
+  - name: get_account
+    description: Return the authenticated account and rate-limit quota.
+    source_operation: openapi/matter-openapi-original.yml#getMe
+  - name: list_items
+    description: List library items with filters (status, tag, content_type, favorite, updated_since).
+    source_operation: openapi/matter-openapi-original.yml#listItems
+  - name: save_item
+    description: Save a new item to the library by URL.
+    source_operation: openapi/matter-openapi-original.yml#createItem
+  - name: get_item
+    description: Get a single item, optionally including parsed markdown.
+    source_operation: openapi/matter-openapi-original.yml#getItem
+  - name: update_item
+    description: Update an item's status, favorite, or reading progress.
+    source_operation: openapi/matter-openapi-original.yml#updateItem
+  - name: delete_item
+    description: Permanently delete an item.
+    source_operation: openapi/matter-openapi-original.yml#deleteItem
+  - name: search
+    description: Full-text search across the library, grouped by type.
+    source_operation: openapi/matter-openapi-original.yml#search
+  - name: list_reading_sessions
+    description: List reading sessions (date + seconds_read) for streaks/stats.
+    source_operation: openapi/matter-openapi-original.yml#listReadingSessions
+  - name: list_annotations
+    description: List all annotations on an item.
+    source_operation: openapi/matter-openapi-original.yml#listAnnotations
+  - name: get_annotation
+    description: Get a single annotation.
+    source_operation: openapi/matter-openapi-original.yml#getAnnotation
+  - name: update_annotation
+    description: Set or remove the note on an annotation.
+    source_operation: openapi/matter-openapi-original.yml#updateAnnotation
+  - name: delete_annotation
+    description: Delete an annotation.
+    source_operation: openapi/matter-openapi-original.yml#deleteAnnotation
+  - name: list_tags
+    description: List all tags in the library.
+    source_operation: openapi/matter-openapi-original.yml#listTags
+  - name: rename_tag
+    description: Rename a tag across all items.
+    source_operation: openapi/matter-openapi-original.yml#updateTag
+  - name: delete_tag
+    description: Delete a tag and remove it from all items.
+    source_operation: openapi/matter-openapi-original.yml#deleteTag
+  - name: add_tag_to_item
+    description: Add a tag to an item (creates it if needed).
+    source_operation: openapi/matter-openapi-original.yml#addTagToItem
+  - name: remove_tag_from_item
+    description: Remove a tag from an item.
+    source_operation: openapi/matter-openapi-original.yml#removeTagFromItem
