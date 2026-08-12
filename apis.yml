@@ -150,6 +150,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/matter-openapi-overlay.yaml
 - type: DeveloperPortal
   url: https://docs.getmatter.com
 - type: Documentation
