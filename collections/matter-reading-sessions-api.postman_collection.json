@@ -1,0 +1,348 @@
+{
+  "item": [
+    {
+      "id": "d6213e40-a31d-4824-9f10-e7e9b1f3bef7",
+      "name": "Reading Sessions",
+      "description": {
+        "content": "Reading time history.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "59f6b891-cfee-4075-b55d-ee85ee9c7038",
+          "name": "List reading sessions",
+          "request": {
+            "name": "List reading sessions",
+            "description": {
+              "content": "Returns a paginated list of reading sessions for the authenticated user,\nordered by date descending (newest first).\n\nEach session records a single reading period with a timestamp and duration.\nUse these to compute reading streaks, daily totals, or other time-based\nstatistics client-side.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "reading_sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Only return sessions on or after this ISO 8601 datetime. Useful for incremental sync.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Number of results per page. Min 1, max 100."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1f10e475-21ca-41d0-afcc-0375c4db7906",
+              "name": "Paginated list of reading sessions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "reading_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "since",
+                      "value": "2026-04-01T00:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "8590"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "8590"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "8590"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"list\",\n  \"results\": [\n    {\n      \"object\": \"reading_session\",\n      \"id\": \"rs_k8x2m\",\n      \"date\": \"2026-04-09T14:23:00Z\",\n      \"seconds_read\": 180\n    },\n    {\n      \"object\": \"reading_session\",\n      \"id\": \"rs_j7w1n\",\n      \"date\": \"2026-04-09T08:12:00Z\",\n      \"seconds_read\": 162\n    },\n    {\n      \"object\": \"reading_session\",\n      \"id\": \"rs_h6v0p\",\n      \"date\": \"2026-04-08T21:45:00Z\",\n      \"seconds_read\": 480\n    }\n  ],\n  \"has_more\": true,\n  \"next_cursor\": \"eyJ1YSI6MTc...\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c25c213-c9fc-4a9d-be4d-9a059241c7bf",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "reading_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "since",
+                      "value": "2026-04-01T00:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e918584d-7ea3-49aa-8add-8afa85cd6596",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "reading_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "since",
+                      "value": "2026-04-01T00:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "02783e5f-4d2b-4f5d-85ce-eec52ea5884b",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "reading_sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "since",
+                      "value": "2026-04-01T00:00:00Z"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "8590"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getmatter.com/public",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "361cb930-a205-4d1c-bf16-aa4ba5737639",
+    "name": "Matter Account Reading Sessions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Matter API lets you read, save, and organize content in your Matter library.\n\nEvery request requires a [Bearer token](/api/authentication) and an active\nMatter Pro subscription.\n\n\nContact Support:\n Email: hello@getmatter.com",
+      "type": "text/plain"
+    }
+  }
+}

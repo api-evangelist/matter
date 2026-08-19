@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Matter Account Search API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/search",
+            "params": [
+              {
+                "name": "query",
+                "value": "machine learning",
+                "type": "query",
+                "description": "Search query string (min 2 characters). Supports operators: `\"phrase\"`, `-exclude`, `by:author`, `site:domain`, `title:word`.\n"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of result types to include. Currently supported: `items`. Additional types will be added in future releases.\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter for item results. Restricts results to items with the given status. Comma-separated for multiple. Omit to search all content. Only applies when `items` is in the `type` parameter.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page. Min 1, max 100."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+              }
+            ]
+          },
+          "docs": "Full-text search across Matter. Results are grouped\nby type, each with independent pagination. Request one or more\ntypes and get back a keyed object with a paginated list per type.\n\nCurrently supported types: `items`. More types (annotations,\nauthors) will be added in the future.\n\nSupports search operators:\n- `\"exact phrase\"` — required phrase match\n- `-excluded` — exclude term\n- `by:author` — filter by author or publisher name\n- `site:domain` — filter by domain\n- `title:word` — match in title o"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

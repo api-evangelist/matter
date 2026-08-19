@@ -1,0 +1,457 @@
+{
+  "item": [
+    {
+      "id": "4a3c674e-d5ab-4ef5-a506-b8308c5c18e6",
+      "name": "Search",
+      "description": {
+        "content": "Full-text search across Matter.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0ad16e26-db92-41cd-9041-8a9b19388b8d",
+          "name": "Search",
+          "request": {
+            "name": "Search",
+            "description": {
+              "content": "Full-text search across Matter. Results are grouped\nby type, each with independent pagination. Request one or more\ntypes and get back a keyed object with a paginated list per type.\n\nCurrently supported types: `items`. More types (annotations,\nauthors) will be added in the future.\n\nSupports search operators:\n- `\"exact phrase\"` — required phrase match\n- `-excluded` — exclude term\n- `by:author` — filter by author or publisher name\n- `site:domain` — filter by domain\n- `title:word` — match in title only\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>",
+                  "description": "(Required) Search query string (min 2 characters). Supports operators: `\"phrase\"`, `-exclude`, `by:author`, `site:domain`, `title:word`.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "(Required) Comma-separated list of result types to include. Currently supported: `items`. Additional types will be added in future releases.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter for item results. Restricts results to items with the given status. Comma-separated for multiple. Omit to search all content. Only applies when `items` is in the `type` parameter.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Number of results per page. Min 1, max 100."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "94688e5b-08f7-417f-b1b0-5f63bbfbb487",
+              "name": "Search results grouped by type. Each type key contains a paginated list of results.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "machine learning"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "4122"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "4122"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "4122"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"items\": {\n    \"object\": \"string\",\n    \"results\": [\n      {\n        \"object\": \"string\",\n        \"id\": \"itm_r9f3a\",\n        \"title\": \"How to Do Great Work\",\n        \"url\": \"https://paulgraham.com/greatwork.html\",\n        \"status\": \"queue\",\n        \"processing_status\": \"completed\",\n        \"is_favorite\": false,\n        \"content_type\": \"article\",\n        \"reading_progress\": 0.35,\n        \"tags\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"tag_n5j2x\",\n            \"name\": \"essays\",\n            \"item_count\": 42,\n            \"created_at\": \"2025-01-15T10:00:00Z\"\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"tag_n5j2x\",\n            \"name\": \"essays\",\n            \"item_count\": 42,\n            \"created_at\": \"2025-01-15T10:00:00Z\"\n          }\n        ],\n        \"updated_at\": \"2026-03-30T19:15:00Z\",\n        \"site_name\": \"paulgraham.com\",\n        \"author\": {\n          \"object\": \"string\",\n          \"id\": \"aut_p4w7q\",\n          \"name\": \"Paul Graham\"\n        },\n        \"word_count\": 11842,\n        \"image_url\": \"http://HNhwjkSoTKzeHOkDuWT.fnFYT-oheQXp-ezKOQAx\",\n        \"excerpt\": \"string\",\n        \"markdown\": \"string\",\n        \"library_position\": 58974321000,\n        \"inbox_position\": 0\n      },\n      {\n        \"object\": \"string\",\n        \"id\": \"itm_r9f3a\",\n        \"title\": \"How to Do Great Work\",\n        \"url\": \"https://paulgraham.com/greatwork.html\",\n        \"status\": \"queue\",\n        \"processing_status\": \"completed\",\n        \"is_favorite\": false,\n        \"content_type\": \"article\",\n        \"reading_progress\": 0.35,\n        \"tags\": [\n          {\n            \"object\": \"string\",\n            \"id\": \"tag_n5j2x\",\n            \"name\": \"essays\",\n            \"item_count\": 42,\n            \"created_at\": \"2025-01-15T10:00:00Z\"\n          },\n          {\n            \"object\": \"string\",\n            \"id\": \"tag_n5j2x\",\n            \"name\": \"essays\",\n            \"item_count\": 42,\n            \"created_at\": \"2025-01-15T10:00:00Z\"\n          }\n        ],\n        \"updated_at\": \"2026-03-30T19:15:00Z\",\n        \"site_name\": \"paulgraham.com\",\n        \"author\": {\n          \"object\": \"string\",\n          \"id\": \"aut_p4w7q\",\n          \"name\": \"Paul Graham\"\n        },\n        \"word_count\": 11842,\n        \"image_url\": \"https://ZVWHdoRrbRluwKObIF.uomM459icbg+BcSp+Kphcz9KvHxAwYNN53N1.JiotdC6dJRXGWD2bIsYmTJXlMmbbQjIjcn6Um\",\n        \"excerpt\": \"string\",\n        \"markdown\": \"string\",\n        \"library_position\": 58974321000,\n        \"inbox_position\": 0\n      }\n    ],\n    \"has_more\": false,\n    \"next_cursor\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0112032d-9817-4fa3-b4e5-4caa8f3b9eed",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "machine learning"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1bfbd84c-4686-4e3b-87e1-fbca9034dfef",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "machine learning"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e63dbee7-a8c6-4c39-92e8-3389c9f46829",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "machine learning"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"validation_error\",\n    \"message\": \"The url field is required.\",\n    \"field\": \"url\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9263dfda-4fdd-409c-98c8-f832428a0164",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "machine learning"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "4122"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getmatter.com/public",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "39b2d600-9a0f-4a7f-90ae-8914041c03f9",
+    "name": "Matter Account Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Matter API lets you read, save, and organize content in your Matter library.\n\nEvery request requires a [Bearer token](/api/authentication) and an active\nMatter Pro subscription.\n\n\nContact Support:\n Email: hello@getmatter.com",
+      "type": "text/plain"
+    }
+  }
+}

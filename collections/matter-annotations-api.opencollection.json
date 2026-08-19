@@ -1,0 +1,116 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Matter Account Annotations API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Annotations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List annotations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/items/:item_id/annotations",
+            "params": [
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page. Min 1, max 100."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+              }
+            ]
+          },
+          "docs": "Returns all annotations for a specific item."
+        },
+        {
+          "info": {
+            "name": "Get annotation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The annotation ID (e.g. `ann_m2k8v`)."
+              }
+            ]
+          },
+          "docs": "Returns a single annotation."
+        },
+        {
+          "info": {
+            "name": "Update annotation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getmatter.com/public/v1/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The annotation ID (e.g. `ann_m2k8v`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set or remove the note on an annotation."
+        },
+        {
+          "info": {
+            "name": "Delete annotation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getmatter.com/public/v1/annotations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The annotation ID (e.g. `ann_m2k8v`)."
+              }
+            ]
+          },
+          "docs": "Permanently delete an annotation."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

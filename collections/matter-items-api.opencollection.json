@@ -1,0 +1,167 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Matter Account Items API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Items",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List items",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/items",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by item status. Comma-separated for multiple values.\n"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Sort order. `updated` sorts by last-updated timestamp (default, best for sync). `library_position` sorts by the item's manual queue ordering (queue_order). `inbox_position` sorts by the item's feed position (newest first). Neither position ordering requires a status filter — items without a position sort last (nulls last).\n"
+              },
+              {
+                "name": "is_favorite",
+                "value": "",
+                "type": "query",
+                "description": "Filter to favorited items only."
+              },
+              {
+                "name": "tag",
+                "value": "",
+                "type": "query",
+                "description": "Filter to items with a specific tag ID. Comma-separated for multiple (matches **any**).\n"
+              },
+              {
+                "name": "content_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by content type. Comma-separated for multiple.\n"
+              },
+              {
+                "name": "updated_since",
+                "value": "",
+                "type": "query",
+                "description": "ISO 8601 timestamp. Return only items updated after this time. Useful for incremental sync.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page. Min 1, max 100."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of items in your library."
+        },
+        {
+          "info": {
+            "name": "Save item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getmatter.com/public/v1/items",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Save a new item to your library by URL. Triggers background content\nextraction. Check `processing_status` to know when the item is ready.\n\nAbout 40% of saves complete instantly (cached content). For the rest,\nprocessing typically takes 20–60 seconds.\n"
+        },
+        {
+          "info": {
+            "name": "Get item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/items/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of additional fields. Currently supported: `markdown`. Markdown requests count against the content rate limit (20/min).\n"
+              }
+            ]
+          },
+          "docs": "Returns a single item from your library with full metadata."
+        },
+        {
+          "info": {
+            "name": "Update item",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getmatter.com/public/v1/items/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an item's status, favorite state, or reading progress."
+        },
+        {
+          "info": {
+            "name": "Delete item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getmatter.com/public/v1/items/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              }
+            ]
+          },
+          "docs": "Permanently remove an item from your library."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

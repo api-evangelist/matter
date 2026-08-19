@@ -1,0 +1,139 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Matter Account Tags API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.getmatter.com/public/v1/tags",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page. Min 1, max 100."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+              }
+            ]
+          },
+          "docs": "Returns all tags in your library, ordered by most recently used."
+        },
+        {
+          "info": {
+            "name": "Rename tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.getmatter.com/public/v1/tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The tag ID (e.g. `tag_n5j2x`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Rename a tag. The new name applies to all items that have this tag."
+        },
+        {
+          "info": {
+            "name": "Delete tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getmatter.com/public/v1/tags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The tag ID (e.g. `tag_n5j2x`)."
+              }
+            ]
+          },
+          "docs": "Permanently delete a tag and remove it from all items."
+        },
+        {
+          "info": {
+            "name": "Add tag to item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.getmatter.com/public/v1/items/:item_id/tags",
+            "params": [
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a tag to an item. Creates the tag if it doesn't exist.\n"
+        },
+        {
+          "info": {
+            "name": "Remove tag from item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.getmatter.com/public/v1/items/:item_id/tags/:tag_id",
+            "params": [
+              {
+                "name": "item_id",
+                "value": "",
+                "type": "path",
+                "description": "The item ID (e.g. `itm_r9f3a`)."
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "The tag ID (e.g. `tag_n5j2x`)."
+              }
+            ]
+          },
+          "docs": "Remove a tag from an item. The tag itself is not deleted — only the association with this item is removed.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

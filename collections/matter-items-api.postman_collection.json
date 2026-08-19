@@ -1,0 +1,1917 @@
+{
+  "item": [
+    {
+      "id": "8076bc4f-b5ea-41df-bbfd-dba9db93e047",
+      "name": "Items",
+      "description": {
+        "content": "Articles, podcasts, videos, PDFs, and tweets in your library.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1bc9cda2-c085-43ef-afde-bd39e44366ad",
+          "name": "List items",
+          "request": {
+            "name": "List items",
+            "description": {
+              "content": "Returns a paginated list of items in your library.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "items"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "all",
+                  "description": "Filter by item status. Comma-separated for multiple values.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "order",
+                  "value": "updated",
+                  "description": "Sort order. `updated` sorts by last-updated timestamp (default, best for sync). `library_position` sorts by the item's manual queue ordering (queue_order). `inbox_position` sorts by the item's feed position (newest first). Neither position ordering requires a status filter — items without a position sort last (nulls last).\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_favorite",
+                  "value": "<boolean>",
+                  "description": "Filter to favorited items only."
+                },
+                {
+                  "disabled": false,
+                  "key": "tag",
+                  "value": "<string>",
+                  "description": "Filter to items with a specific tag ID. Comma-separated for multiple (matches **any**).\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "content_type",
+                  "value": "<string>",
+                  "description": "Filter by content type. Comma-separated for multiple.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "updated_since",
+                  "value": "<dateTime>",
+                  "description": "ISO 8601 timestamp. Return only items updated after this time. Useful for incremental sync.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "25",
+                  "description": "Number of results per page. Min 1, max 100."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque cursor for the next page of results, from a previous `next_cursor`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "aadc9d4f-d595-4c3f-abbd-5a8bf52c14c6",
+              "name": "Paginated list of items.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "all"
+                    },
+                    {
+                      "key": "order",
+                      "value": "updated"
+                    },
+                    {
+                      "key": "is_favorite",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "tag",
+                      "value": "tag_n5j2x,tag_k3m9p"
+                    },
+                    {
+                      "key": "content_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"results\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"itm_r9f3a\",\n      \"title\": \"How to Do Great Work\",\n      \"url\": \"https://paulgraham.com/greatwork.html\",\n      \"status\": \"queue\",\n      \"processing_status\": \"completed\",\n      \"is_favorite\": false,\n      \"content_type\": \"article\",\n      \"reading_progress\": 0.35,\n      \"tags\": [\n        {\n          \"object\": \"string\",\n          \"id\": \"tag_n5j2x\",\n          \"name\": \"essays\",\n          \"item_count\": 42,\n          \"created_at\": \"2025-01-15T10:00:00Z\"\n        },\n        {\n          \"object\": \"string\",\n          \"id\": \"tag_n5j2x\",\n          \"name\": \"essays\",\n          \"item_count\": 42,\n          \"created_at\": \"2025-01-15T10:00:00Z\"\n        }\n      ],\n      \"updated_at\": \"2026-03-30T19:15:00Z\",\n      \"site_name\": \"paulgraham.com\",\n      \"author\": {\n        \"object\": \"string\",\n        \"id\": \"aut_p4w7q\",\n        \"name\": \"Paul Graham\"\n      },\n      \"word_count\": 11842,\n      \"image_url\": \"http://eydrFpJqEzCTdzw.gceueeXolv\",\n      \"excerpt\": \"string\",\n      \"markdown\": \"string\",\n      \"library_position\": 58974321000,\n      \"inbox_position\": 0\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"itm_r9f3a\",\n      \"title\": \"How to Do Great Work\",\n      \"url\": \"https://paulgraham.com/greatwork.html\",\n      \"status\": \"queue\",\n      \"processing_status\": \"completed\",\n      \"is_favorite\": false,\n      \"content_type\": \"article\",\n      \"reading_progress\": 0.35,\n      \"tags\": [\n        {\n          \"object\": \"string\",\n          \"id\": \"tag_n5j2x\",\n          \"name\": \"essays\",\n          \"item_count\": 42,\n          \"created_at\": \"2025-01-15T10:00:00Z\"\n        },\n        {\n          \"object\": \"string\",\n          \"id\": \"tag_n5j2x\",\n          \"name\": \"essays\",\n          \"item_count\": 42,\n          \"created_at\": \"2025-01-15T10:00:00Z\"\n        }\n      ],\n      \"updated_at\": \"2026-03-30T19:15:00Z\",\n      \"site_name\": \"paulgraham.com\",\n      \"author\": {\n        \"object\": \"string\",\n        \"id\": \"aut_p4w7q\",\n        \"name\": \"Paul Graham\"\n      },\n      \"word_count\": 11842,\n      \"image_url\": \"https://yhhBnkroaK.aiywpipy3m\",\n      \"excerpt\": \"string\",\n      \"markdown\": \"string\",\n      \"library_position\": 58974321000,\n      \"inbox_position\": 0\n    }\n  ],\n  \"has_more\": true,\n  \"next_cursor\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4206d809-aa7c-4e6e-8c09-eea9c38ed937",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "all"
+                    },
+                    {
+                      "key": "order",
+                      "value": "updated"
+                    },
+                    {
+                      "key": "is_favorite",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "tag",
+                      "value": "tag_n5j2x,tag_k3m9p"
+                    },
+                    {
+                      "key": "content_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "00e7ce14-0df2-48e3-b83b-d5575138ab91",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "all"
+                    },
+                    {
+                      "key": "order",
+                      "value": "updated"
+                    },
+                    {
+                      "key": "is_favorite",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "tag",
+                      "value": "tag_n5j2x,tag_k3m9p"
+                    },
+                    {
+                      "key": "content_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e27dcc82-93fd-46f7-8233-0bbb75452328",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "all"
+                    },
+                    {
+                      "key": "order",
+                      "value": "updated"
+                    },
+                    {
+                      "key": "is_favorite",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "tag",
+                      "value": "tag_n5j2x,tag_k3m9p"
+                    },
+                    {
+                      "key": "content_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "updated_since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "25"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d353e16e-4c5d-4732-a618-4aafe5f0f4a4",
+          "name": "Save item",
+          "request": {
+            "name": "Save item",
+            "description": {
+              "content": "Save a new item to your library by URL. Triggers background content\nextraction. Check `processing_status` to know when the item is ready.\n\nAbout 40% of saves complete instantly (cached content). For the rest,\nprocessing typically takes 20–60 seconds.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "items"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"<uri>\",\n  \"status\": \"queue\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "41221269-3f3b-4ed5-b713-804454bee748",
+              "name": "Item saved.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"id\": \"itm_r9f3a\",\n  \"title\": \"How to Do Great Work\",\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\",\n  \"processing_status\": \"completed\",\n  \"is_favorite\": false,\n  \"content_type\": \"article\",\n  \"reading_progress\": 0.35,\n  \"tags\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"updated_at\": \"2026-03-30T19:15:00Z\",\n  \"site_name\": \"paulgraham.com\",\n  \"author\": {\n    \"object\": \"string\",\n    \"id\": \"aut_p4w7q\",\n    \"name\": \"Paul Graham\"\n  },\n  \"word_count\": 11842,\n  \"image_url\": \"https://yyuKYadkMBumRrVNcTNQSmmgHJiNfu.fnycuK00d4+cje9wpSPl\",\n  \"excerpt\": \"string\",\n  \"markdown\": \"string\",\n  \"library_position\": 58974321000,\n  \"inbox_position\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "39162728-16b9-48e6-a17a-ea0b93e46e34",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d8a9dd2-454f-43ab-8492-26360222d6f4",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b6d299e-b132-4370-90a8-1154d11803a0",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"validation_error\",\n    \"message\": \"The url field is required.\",\n    \"field\": \"url\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "783ec2e5-4b44-4939-bbd0-4c6fba05399b",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6d429624-8a24-433e-bce5-5b91626277bc",
+          "name": "Get item",
+          "request": {
+            "name": "Get item",
+            "description": {
+              "content": "Returns a single item from your library with full metadata.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "items",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<string>",
+                  "description": "Comma-separated list of additional fields. Currently supported: `markdown`. Markdown requests count against the content rate limit (20/min).\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "562a2f77-a739-46c6-bb69-4ef480323944",
+              "name": "Item detail.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "markdown"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"id\": \"itm_r9f3a\",\n  \"title\": \"How to Do Great Work\",\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\",\n  \"processing_status\": \"completed\",\n  \"is_favorite\": false,\n  \"content_type\": \"article\",\n  \"reading_progress\": 0.35,\n  \"tags\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"updated_at\": \"2026-03-30T19:15:00Z\",\n  \"site_name\": \"paulgraham.com\",\n  \"author\": {\n    \"object\": \"string\",\n    \"id\": \"aut_p4w7q\",\n    \"name\": \"Paul Graham\"\n  },\n  \"word_count\": 11842,\n  \"image_url\": \"https://yyuKYadkMBumRrVNcTNQSmmgHJiNfu.fnycuK00d4+cje9wpSPl\",\n  \"excerpt\": \"string\",\n  \"markdown\": \"string\",\n  \"library_position\": 58974321000,\n  \"inbox_position\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "34c37eb0-bc5f-40b1-b70b-2d5dd072176a",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "markdown"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "41b24bac-e9fb-4b63-a293-d602dd3cb1b3",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "markdown"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "769000da-f3ac-400b-a047-78644afab352",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "markdown"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"The requested resource was not found.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5c153a0f-84ae-4911-bbfd-035694186c42",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include",
+                      "value": "markdown"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d943bb25-2c1b-47a6-9bd4-f6199db86fbf",
+          "name": "Update item",
+          "request": {
+            "name": "Update item",
+            "description": {
+              "content": "Update an item's status, favorite state, or reading progress.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "items",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c55ffe1f-90af-4373-ba1b-0afed22ef657",
+              "name": "Updated item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Maximum requests allowed in the current window.",
+                  "key": "X-RateLimit-Limit",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Requests remaining in the current window.",
+                  "key": "X-RateLimit-Remaining",
+                  "value": "2398"
+                },
+                {
+                  "disabled": false,
+                  "description": "Unix timestamp (seconds) when the window resets.",
+                  "key": "X-RateLimit-Reset",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"object\": \"string\",\n  \"id\": \"itm_r9f3a\",\n  \"title\": \"How to Do Great Work\",\n  \"url\": \"https://paulgraham.com/greatwork.html\",\n  \"status\": \"queue\",\n  \"processing_status\": \"completed\",\n  \"is_favorite\": false,\n  \"content_type\": \"article\",\n  \"reading_progress\": 0.35,\n  \"tags\": [\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    },\n    {\n      \"object\": \"string\",\n      \"id\": \"tag_n5j2x\",\n      \"name\": \"essays\",\n      \"item_count\": 42,\n      \"created_at\": \"2025-01-15T10:00:00Z\"\n    }\n  ],\n  \"updated_at\": \"2026-03-30T19:15:00Z\",\n  \"site_name\": \"paulgraham.com\",\n  \"author\": {\n    \"object\": \"string\",\n    \"id\": \"aut_p4w7q\",\n    \"name\": \"Paul Graham\"\n  },\n  \"word_count\": 11842,\n  \"image_url\": \"https://yyuKYadkMBumRrVNcTNQSmmgHJiNfu.fnycuK00d4+cje9wpSPl\",\n  \"excerpt\": \"string\",\n  \"markdown\": \"string\",\n  \"library_position\": 58974321000,\n  \"inbox_position\": 0\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "603a6419-d838-4dcb-ade3-3bb6fdfde2a4",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f84d8496-9875-441d-935d-3eea938a2d06",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1b9a532a-5df0-49d9-b3cc-0b2f2b8972c0",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"The requested resource was not found.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5bfe6248-bc94-4bf1-b150-bd9395527c8c",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"validation_error\",\n    \"message\": \"The url field is required.\",\n    \"field\": \"url\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bc49d87-10fb-42ea-a975-150feb69b1be",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"<string>\",\n  \"is_favorite\": \"<boolean>\",\n  \"reading_progress\": \"<float>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bb045038-a377-4276-ac16-7f07d89a1fa2",
+          "name": "Delete item",
+          "request": {
+            "name": "Delete item",
+            "description": {
+              "content": "Permanently remove an item from your library.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "items",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d050f6d6-bcd2-4b2e-b7ea-33669b5eddae",
+              "name": "Item deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f13d8bd9-74f9-48a1-b87b-a6965e950c32",
+              "name": "Invalid or missing API token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"authentication_required\",\n    \"message\": \"A valid API token is required.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aafa2714-cbee-4f06-ae7a-66453ddc6b5b",
+              "name": "Active Matter Pro subscription required.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"pro_required\",\n    \"message\": \"A Matter Pro subscription is required to use the API.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "990cb754-cba5-43bd-8aa7-7cc04ec336a9",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"not_found\",\n    \"message\": \"The requested resource was not found.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "99464805-8acf-4499-a1cb-2d2de4629f78",
+              "name": "Rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "items",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The item ID (e.g. `itm_r9f3a`)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Seconds to wait before retrying.",
+                  "key": "Retry-After",
+                  "value": "2398"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"rate_limited\",\n    \"message\": \"Rate limit exceeded. Retry after 12 seconds.\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.getmatter.com/public",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f5abc101-6519-4072-a1d2-251e53e7c13a",
+    "name": "Matter Account Items API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Matter API lets you read, save, and organize content in your Matter library.\n\nEvery request requires a [Bearer token](/api/authentication) and an active\nMatter Pro subscription.\n\n\nContact Support:\n Email: hello@getmatter.com",
+      "type": "text/plain"
+    }
+  }
+}
