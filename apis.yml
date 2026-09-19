@@ -84,6 +84,8 @@ apis:
   humanURL: https://docs.getmatter.com/api
   baseURL: https://api.getmatter.com/public/v1
   tags:
+  - Annotation
+  tags_raw:
   - Annotations
   properties:
   - type: OpenAPI
