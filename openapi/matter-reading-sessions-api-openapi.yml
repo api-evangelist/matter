@@ -1,15 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Matter Account Reading Sessions API
+  title: Matter Reading Sessions API
   version: '1.0'
   description: 'The Matter API lets you read, save, and organize content in your Matter library.
 
 
-    Every request requires a [Bearer token](/api/authentication) and an active
+    Every request requires a Bearer token and an active
 
-    Matter Pro subscription.
-
-    '
+    Matter Pro subscription.'
   contact:
     email: hello@getmatter.com
     url: https://getmatter.com
@@ -35,9 +33,7 @@ paths:
 
         Use these to compute reading streaks, daily totals, or other time-based
 
-        statistics client-side.
-
-        '
+        statistics client-side.'
       tags:
       - Reading Sessions
       parameters:
@@ -97,76 +93,7 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    RateLimited:
-      description: Rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Seconds to wait before retrying.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: rate_limited
-              message: Rate limit exceeded. Retry after 12 seconds.
-    Unauthorized:
-      description: Invalid or missing API token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: authentication_required
-              message: A valid API token is required.
-    ProRequired:
-      description: Active Matter Pro subscription required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: pro_required
-              message: A Matter Pro subscription is required to use the API.
-  headers:
-    X-RateLimit-Reset:
-      description: Unix timestamp (seconds) when the window resets.
-      schema:
-        type: integer
-    X-RateLimit-Limit:
-      description: Maximum requests allowed in the current window.
-      schema:
-        type: integer
-    X-RateLimit-Remaining:
-      description: Requests remaining in the current window.
-      schema:
-        type: integer
   schemas:
-    PaginatedList:
-      type: object
-      required:
-      - object
-      - results
-      - has_more
-      properties:
-        object:
-          type: string
-          const: list
-        results:
-          type: array
-          items: {}
-        has_more:
-          type: boolean
-          description: Whether there are more results after this page.
-        next_cursor:
-          type: string
-          nullable: true
-          description: Cursor to fetch the next page. `null` when there are no more results.
     ReadingSession:
       type: object
       required:
@@ -191,6 +118,26 @@ components:
           type: integer
           description: Duration of the session in seconds.
           example: 180
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
     Error:
       type: object
       required:
@@ -211,13 +158,20 @@ components:
             field:
               type: string
               description: The request field that caused the error, if applicable.
-  parameters:
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+  headers:
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
       schema:
-        type: string
+        type: integer
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
+  parameters:
     limit:
       name: limit
       in: query
@@ -227,6 +181,48 @@ components:
         default: 25
         minimum: 1
         maximum: 100
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
   securitySchemes:
     bearerAuth:
       type: http
