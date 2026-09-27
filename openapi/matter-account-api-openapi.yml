@@ -62,105 +62,19 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   headers:
-    X-RateLimit-Remaining:
-      description: Requests remaining in the current window.
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
       schema:
         type: integer
     X-RateLimit-Limit:
       description: Maximum requests allowed in the current window.
       schema:
         type: integer
-    X-RateLimit-Reset:
-      description: Unix timestamp (seconds) when the window resets.
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
       schema:
         type: integer
-  responses:
-    ProRequired:
-      description: Active Matter Pro subscription required.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: pro_required
-              message: A Matter Pro subscription is required to use the API.
-    RateLimited:
-      description: Rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Seconds to wait before retrying.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: rate_limited
-              message: Rate limit exceeded. Retry after 12 seconds.
-    Unauthorized:
-      description: Invalid or missing API token.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-            error:
-              code: authentication_required
-              message: A valid API token is required.
   schemas:
-    Error:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-              description: Machine-readable error code.
-            message:
-              type: string
-              description: Human-readable error message.
-            field:
-              type: string
-              description: The request field that caused the error, if applicable.
-    Account:
-      type: object
-      required:
-      - object
-      - id
-      - name
-      - email
-      - rate_limit
-      - created_at
-      properties:
-        object:
-          type: string
-          const: account
-        id:
-          type: string
-          description: Prefixed account ID (e.g. `act_k8x2m`).
-          example: act_k8x2m
-        name:
-          type: string
-          example: Jane Smith
-        email:
-          type: string
-          format: email
-          example: jane@example.com
-        rate_limit:
-          $ref: '#/components/schemas/RateLimit'
-        created_at:
-          type: string
-          format: date-time
-          example: '2024-06-15T10:30:00Z'
     RateLimit:
       type: object
       description: Per-minute quotas (except burst which is per-second).
@@ -195,6 +109,92 @@ components:
           type: integer
           description: All requests per second.
           example: 5
+    Account:
+      type: object
+      required:
+      - object
+      - id
+      - name
+      - email
+      - rate_limit
+      - created_at
+      properties:
+        object:
+          type: string
+          const: account
+        id:
+          type: string
+          description: Prefixed account ID (e.g. `act_k8x2m`).
+          example: act_k8x2m
+        name:
+          type: string
+          example: Jane Smith
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        rate_limit:
+          $ref: '#/components/schemas/RateLimit'
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-06-15T10:30:00Z'
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+  responses:
+    RateLimited:
+      description: Rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Seconds to wait before retrying.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: rate_limited
+              message: Rate limit exceeded. Retry after 12 seconds.
+    Unauthorized:
+      description: Invalid or missing API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: authentication_required
+              message: A valid API token is required.
+    ProRequired:
+      description: Active Matter Pro subscription required.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              code: pro_required
+              message: A Matter Pro subscription is required to use the API.
   securitySchemes:
     bearerAuth:
       type: http
