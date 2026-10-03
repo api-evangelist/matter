@@ -163,35 +163,85 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  headers:
-    X-RateLimit-Reset:
-      description: Unix timestamp (seconds) when the window resets.
-      schema:
-        type: integer
-    X-RateLimit-Limit:
-      description: Maximum requests allowed in the current window.
-      schema:
-        type: integer
-    X-RateLimit-Remaining:
-      description: Requests remaining in the current window.
-      schema:
-        type: integer
-  parameters:
-    limit:
-      name: limit
-      in: query
-      description: Number of results per page. Min 1, max 100.
-      schema:
-        type: integer
-        default: 25
-        minimum: 1
-        maximum: 100
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
-      schema:
-        type: string
+  schemas:
+    PaginatedList:
+      type: object
+      required:
+      - object
+      - results
+      - has_more
+      properties:
+        object:
+          type: string
+          const: list
+        results:
+          type: array
+          items: {}
+        has_more:
+          type: boolean
+          description: Whether there are more results after this page.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor to fetch the next page. `null` when there are no more results.
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code.
+            message:
+              type: string
+              description: Human-readable error message.
+            field:
+              type: string
+              description: The request field that caused the error, if applicable.
+    Annotation:
+      type: object
+      required:
+      - object
+      - id
+      - item_id
+      - text
+      - created_at
+      - updated_at
+      properties:
+        object:
+          type: string
+          const: annotation
+        id:
+          type: string
+          description: Prefixed annotation ID (e.g. `ann_m2k8v`).
+          example: ann_m2k8v
+        item_id:
+          type: string
+          description: The parent item ID.
+          example: itm_r9f3a
+        text:
+          type: string
+          description: The highlighted text.
+          example: The way to figure out what to work on is by working.
+        note:
+          type: string
+          nullable: true
+          description: User-added note, if any.
+          example: Core thesis of the essay
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-03-30T18:32:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2026-03-30T18:32:00Z'
   responses:
     RateLimited:
       description: Rate limit exceeded.
@@ -238,85 +288,35 @@ components:
             error:
               code: authentication_required
               message: A valid API token is required.
-  schemas:
-    PaginatedList:
-      type: object
-      required:
-      - object
-      - results
-      - has_more
-      properties:
-        object:
-          type: string
-          const: list
-        results:
-          type: array
-          items: {}
-        has_more:
-          type: boolean
-          description: Whether there are more results after this page.
-        next_cursor:
-          type: string
-          nullable: true
-          description: Cursor to fetch the next page. `null` when there are no more results.
-    Annotation:
-      type: object
-      required:
-      - object
-      - id
-      - item_id
-      - text
-      - created_at
-      - updated_at
-      properties:
-        object:
-          type: string
-          const: annotation
-        id:
-          type: string
-          description: Prefixed annotation ID (e.g. `ann_m2k8v`).
-          example: ann_m2k8v
-        item_id:
-          type: string
-          description: The parent item ID.
-          example: itm_r9f3a
-        text:
-          type: string
-          description: The highlighted text.
-          example: The way to figure out what to work on is by working.
-        note:
-          type: string
-          nullable: true
-          description: User-added note, if any.
-          example: Core thesis of the essay
-        created_at:
-          type: string
-          format: date-time
-          example: '2026-03-30T18:32:00Z'
-        updated_at:
-          type: string
-          format: date-time
-          example: '2026-03-30T18:32:00Z'
-    Error:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          type: object
-          required:
-          - code
-          - message
-          properties:
-            code:
-              type: string
-              description: Machine-readable error code.
-            message:
-              type: string
-              description: Human-readable error message.
-            field:
-              type: string
-              description: The request field that caused the error, if applicable.
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque cursor for the next page of results, from a previous `next_cursor`.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: Number of results per page. Min 1, max 100.
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+  headers:
+    X-RateLimit-Limit:
+      description: Maximum requests allowed in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Remaining:
+      description: Requests remaining in the current window.
+      schema:
+        type: integer
+    X-RateLimit-Reset:
+      description: Unix timestamp (seconds) when the window resets.
+      schema:
+        type: integer
   securitySchemes:
     bearerAuth:
       type: http
