@@ -64,6 +64,134 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Matter is a company surfaced as a portfolio company of gv and added to the API Evangelist network as a stub for enrichment. Sector: consumer. This profile is a lead awaiting the enrichment pipeline.
+Matter is a modern read-later application for people who take reading seriously — save articles, newsletters, podcasts, PDFs, and tweets from anywhere and read them in a clean, focused interface on iOS and the web, with highlighting, notes, tags, offline search, text-to-speech, and audio transcription of podcasts and videos. For Matter Pro subscribers, Matter ships a public REST API (api.getmatter.com/public/v1) to save, organize, search, and incrementally sync a reading library, secured with a personal Bearer token. It is complemented by a first-party CLI/TUI and official Obsidian, Roam, and Logseq highlight-export integrations. Matter is backed by GV (Google Ventures).
 
-Backed by: gv — http://getmatter.app
+**Areas:** Company · Consumer · Reading · Read Later · Productivity · Content · Highlights · Bookmarking
+
+## Matter on APIs.io
+
+Everything profiled for Matter is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/matter/](https://apis.io/providers/matter/)** — or go straight to one of the APIs or properties below.
+
+### APIs (6)
+
+- [Matter Account API](https://apis.io/apis/matter/matter-account-api/) — Your user profile and API quota.
+- [Matter Annotations API](https://apis.io/apis/matter/matter-annotations-api/) — Highlights and notes on items.
+- [Matter Items API](https://apis.io/apis/matter/matter-items-api/) — Articles, podcasts, videos, PDFs, and tweets in your library.
+- [Matter Reading Sessions API](https://apis.io/apis/matter/matter-reading-sessions-api/) — Reading time history.
+- [Matter Search API](https://apis.io/apis/matter/matter-search-api/) — Full-text search across Matter.
+- [Matter Tags API](https://apis.io/apis/matter/matter-tags-api/) — Labels for organizing items.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [matter](https://apis.io/servers/matter/matter/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Matter Agentic Access](https://apis.io/agentic-access/matter/matter-agentic-access/)
+
+#### Collections (6)
+
+Postman and Open Collection request collections.
+
+- [Matter Account API](https://apis.io/collections/matter/open-matter-account-api/)
+- [Matter Account Annotations API](https://apis.io/collections/matter/open-matter-annotations-api/)
+- [Matter Account Items API](https://apis.io/collections/matter/open-matter-items-api/)
+- [Matter Account Reading Sessions API](https://apis.io/collections/matter/open-matter-reading-sessions-api/)
+- [Matter Account Search API](https://apis.io/collections/matter/open-matter-search-api/)
+- [Matter Account Tags API](https://apis.io/collections/matter/open-matter-tags-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Matter Openapi Overlay](https://apis.io/overlays/matter/matter-openapi-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Matter Authentication](https://apis.io/security/matter/matter-authentication/)
+- [Matter Domain Security](https://apis.io/security/matter/matter-domain-security/)
+- [Matter Vulnerability Disclosure](https://apis.io/security/matter/matter-vulnerability-disclosure/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Matter Rate Limits](https://apis.io/rate-limits/matter/matter-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.getmatter.com)
+- [Documentation](https://docs.getmatter.com/api)
+- [Getting started](https://docs.getmatter.com/api/quickstart)
+- [API reference](https://docs.getmatter.com/api)
+- [Sign up](https://web.getmatter.com)
+- [Terms of service](https://www.getmatter.com/terms)
+- [Privacy policy](https://www.getmatter.com/privacy)
+- [GitHub](https://github.com/getmatterapp)
+
+## API Evangelist rating
+
+**Kin Score 51.2** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 56.9 |
+| Contract governance | 4.5 |
+| Operational transparency | 52.6 |
+| Developer ergonomics | 63.7 |
+| Access clarity | 34.2 |
+
+**Agent readiness 32.6** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 30.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/matter/](https://apis.io/providers/matter/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Matter: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/matter/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
